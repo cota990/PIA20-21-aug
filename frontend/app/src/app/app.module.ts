@@ -13,6 +13,8 @@ import { DelegationLeaderComponent } from './components/delegation-leader/delega
 import { UnregisteredComponent } from './components/unregistered/unregistered.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { RegisterComponent } from './components/register/register.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { FooterComponent } from './components/footer/footer.component';
     DelegationLeaderComponent,
     UnregisteredComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    RegisterComponent,
+    PasswordResetComponent
   ],
   imports: [
     BrowserModule,
