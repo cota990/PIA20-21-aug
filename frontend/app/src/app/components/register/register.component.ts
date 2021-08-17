@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -8,7 +8,7 @@ import { Validators } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
       this.countries = [{name: 'Serbia', abbr: 'Ser', flag: 'flag'}, {name: 'United States Of America', abbr: 'USA', flag: 'flag'}];
@@ -28,6 +28,11 @@ export class RegisterComponent implements OnInit {
 
   register () {
 
+    this.userService.register(this.username, this.password, this.passwordConfirmation, this.mail, this.firstname, this.lastname, this.country, this.type).subscribe(res => {
+
+      console.log (res);
+      console.log (res['status']);
+    })
   }
 
 }

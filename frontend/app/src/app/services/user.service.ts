@@ -19,4 +19,20 @@ export class UserService {
 
     return this.http.post(`${this.uri}/users/login`, data);
   }
+
+  register (username, password, passwordConfirmation, mail, firstname, lastname, country, type) {
+
+    const data = {
+      username: username,
+      password: password,
+      passwordConfirmation: passwordConfirmation,
+      mail: mail,
+      firstname: firstname,
+      lastname: lastname,
+      country: country,
+      type: type
+    }
+
+    return this.http.post(`${this.uri}/users/register`, data);
+  }
 }
