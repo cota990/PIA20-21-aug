@@ -3,11 +3,80 @@
     <div class='row'>
 
         <div class = 'col-sm-12 col-md-6'>
-            Countries preview
+
+            <h3>Participating countries</h3>
+            
+            <table class = 'table table-striped'>
+
+                <thead>
+
+                    <tr>
+                        
+                        <th scope = 'col'>Flag</th>
+                        <th scope = 'col'(click)='sortByName()'>Name</th>
+                        <th scope = 'col' (click)='sortByNumOfParticipants()'>Participants</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let country of participatingCountries">
+
+                        <td>
+                            <img [src]="'/assets/' + country.abbr.toLowerCase() + '.jpg'" class="mr-2" style="width: 40px">
+                        </td>
+                        <td>{{country.name}}</td>
+                        <td>{{country.numOfParticipants}}</td>
+                    
+                    </tr>
+
+                </tbody>
+
+            </table>
+
         </div>
 
         <div class = 'col-sm-12 col-md-6'>
-            Medals count
+            
+            <h3>Medal count</h3>
+
+            <table class = 'table table-striped'>
+
+                <thead>
+
+                    <tr>
+                        
+                        <th scope = 'col'>Ranking</th>
+                        <th scope = 'col'>Country</th>
+                        <th scope = 'col'>Gold</th>
+                        <th scope = 'col'>Silver</th>
+                        <th scope = 'col'>Bronze</th>
+                        <th scope = 'col'>Total</th>
+                    
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let country of medalCountCountries">
+                        
+                        <td>{{country.ranking}}</td>
+                        <td>
+                            <img [src]="'/assets/' + country.abbr.toLowerCase() + '.jpg'" class="mr-2" style="width: 40px">{{country.name}}
+                        </td>
+                        <td>{{country.numOfGoldMedals}}</td>
+                        <td>{{country.numOfSilverMedals}}</td>
+                        <td>{{country.numOfBronzeMedals}}</td>
+                        <td>{{country.numOfTotalMedals}}</td>
+                    
+                    </tr>
+
+                </tbody>
+
+            </table>
+
         </div>
 
     </div>

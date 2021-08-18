@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Country } from 'src/app/models/Country';
+import { CountryService } from 'src/app/services/country.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -8,10 +10,14 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private countryService: CountryService) { }
 
   ngOnInit(): void {
-      this.countries = [{name: 'Serbia', abbr: 'Ser', flag: 'flag'}, {name: 'United States Of America', abbr: 'USA', flag: 'flag'}];
+      this.countryService.getAllCountries().subscribe( (res:Country[]) => {
+
+        this.countries = res;
+        
+      });
   }
 
   username: string;
@@ -24,7 +30,7 @@ export class RegisterComponent implements OnInit {
 
   passwordConfirmation: string;
 
-  countries: Object[];
+  countries: Country[];
 
   register () {
 
