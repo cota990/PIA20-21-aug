@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/models/User';
 import { UserService } from 'src/app/services/user.service';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-login',
@@ -40,6 +41,8 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['leader']);
 
         }
+
+        HeaderComponent.displayUserPanel = true;
       
       }
 
