@@ -1,0 +1,93 @@
+.countries-container {
+    height: 760px;
+    max-height: 760px;
+    min-height: 300px;
+    display: flex;
+    align-items: top;
+    padding-top: 20px;
+}
+
+.countries-row {
+    width: 100%;
+    height: 600px;
+}
+
+table, th, td {
+    border: 1px solid red;
+    text-align: center;
+}
+
+table {
+    width: 90%
+}
+
+.country-name-with-flag {
+    text-align: left;
+}
+
+th, td {
+    padding: 10px;
+}
+
+th {
+    background-color: red;
+    color: white;
+}
+
+tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+img {
+    border: 1px solid black;
+}
+
+.pagination {
+     width: 90%;
+     display: block;
+}
+
+.pagination-previous {
+    float: left;
+}
+
+.pagination-next {
+    float: right;
+}
+
+.pagination-span {
+    height: 30px;
+    vertical-align: middle;
+    color: blue;
+    cursor: pointer;
+}
+
+.pagination-span-disabled {
+    height: 30px;
+    vertical-align: middle;
+    color: grey;
+    pointer-events: none;
+}
+
+.pagination-go-to-page {
+    display:table;
+    margin:0 auto;
+    height: 30px;
+    vertical-align: middle
+}
+
+.pagination-input {
+    width: 50px;
+    height: 25px;
+}
+
+.pagination-button {
+    width: 50px;
+    height: 27px;
+    margin-left: 15px;
+    margin-top: 2px;
+}

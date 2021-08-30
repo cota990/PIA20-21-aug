@@ -8,7 +8,6 @@ import { OrganizerComponent } from './components/organizer/organizer.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { RegisterComponent } from './components/register/register.component';
 import { CountriesComponent } from './components/unregistered/countries/countries.component';
-import { MedalsCountComponent } from './components/unregistered/medals-count/medals-count.component';
 import { MedalsVisualizationComponent } from './components/unregistered/medals-visualization/medals-visualization.component';
 import { ParticipantsComponent } from './components/unregistered/participants/participants.component';
 import { UnregisteredComponent } from './components/unregistered/unregistered.component';
@@ -32,11 +31,7 @@ const routes: Routes = [
       {
         path: 'countries',
         component: CountriesComponent
-      },
-      {
-        path: 'medalsCount',
-        component: MedalsCountComponent
-      },
+      },      
       {
         path: 'medalsVisualization',
         component: MedalsVisualizationComponent

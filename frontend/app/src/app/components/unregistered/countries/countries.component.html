@@ -1,1 +1,119 @@
-<p>countries works!</p>
+<div class='container-fluid countries-container'>
+
+    <div class='row countries-row'>
+
+        <div class = 'col-sm-6'>
+
+            <h3>Participating countries</h3>
+
+            <table>
+
+                <tr>
+                    
+                    <th>Flag</th>
+                    <th>Country</th>
+                    <th>Number of participants</th>
+
+                </tr>
+
+                <tr *ngFor = 'let country of participatingCountriesForDisplay'>
+
+                    <td>
+                        <img [src]="'/assets/' + country.abbr.toLowerCase() + '.jpg'" class="mr-2" style="width: 40px">
+                    </td>
+                    <td class = 'country-name-with-flag'>{{country.name}}</td>
+                    <td>{{country.numOfParticipants}}</td>
+
+                </tr>
+
+                <tr *ngIf = 'participatingCountriesForDisplay.length == 0'>
+
+                    <td colspan="6">
+                        No country has any participants currently
+                    </td>
+                </tr>
+            
+            </table>
+
+            <div *ngIf = 'participatingCountriesForDisplay.length != 0' class = 'pagination'>
+                
+                <span class = 'pagination-previous' 
+                      [ngClass] = 'currentPageParticipatingCountries != 1 ? "pagination-span" : "pagination-span-disabled"'
+                      (click) = 'goToPreviousPageParticipatingCountries()'>&lt;Previous</span>
+                
+                <span class = 'pagination-next' 
+                      [ngClass] = 'currentPageParticipatingCountries != numOfPagesParticipatingCountries ? "pagination-span" : "pagination-span-disabled"'
+                      (click) = 'goToNextPageParticipatingCountries()'>Next&gt;</span>
+
+                <div class = 'pagination-go-to-page'>
+                    Go to page:
+                    <input type="number" [(ngModel)] = 'inputPageParticipatingCountries' class = 'pagination-input' min = '1' max = '{{numOfPagesParticipatingCountries}}'>
+                    <button (click) = 'goToPageParticipatingCountries()' class = 'pagination-button'>GO</button>
+                </div>
+                
+            </div>
+
+        </div>
+
+        <div class = 'col-sm-6'>
+
+            <h3>Medal count</h3>
+
+            <table>
+
+                <tr>
+                    
+                    <th>Ranking</th>
+                    <th>Country</th>
+                    <th>Gold</th>
+                    <th>Silver</th>
+                    <th>Bronze</th>
+                    <th>Total</th>
+
+                </tr>
+
+                <tr *ngFor = 'let country of medalCountCountriesForDisplay'>
+
+                    <td>{{country.ranking}}</td>
+                    <td class = 'country-name-with-flag'>
+                        <img [src]="'/assets/' + country.abbr.toLowerCase() + '.jpg'" class="mr-2" style="width: 40px">  {{country.name}}
+                    </td>
+                    <td>{{country.numOfGoldMedals}}</td>
+                    <td>{{country.numOfSilverMedals}}</td>
+                    <td>{{country.numOfBronzeMedals}}</td>
+                    <td>{{country.numOfTotalMedals}}</td>
+
+                </tr >
+
+                <tr *ngIf = 'medalCountCountriesForDisplay.length == 0'>
+
+                    <td colspan="6">
+                        No medals are currently awarded
+                    </td>
+                </tr>
+            
+            </table>
+
+            <div *ngIf = 'medalCountCountriesForDisplay.length != 0' class = 'pagination'>
+                
+                <span class = 'pagination-previous' 
+                      [ngClass] = 'currentPageMedalCount != 1 ? "pagination-span" : "pagination-span-disabled"'
+                      (click) = 'goToPreviousPageMedalCount()'>&lt;Previous</span>
+                
+                <span class = 'pagination-next' 
+                      [ngClass] = 'currentPageMedalCount != numOfPagesMedalCount ? "pagination-span" : "pagination-span-disabled"'
+                      (click) = 'goToNextPageMedalCount()'>Next&gt;</span>
+
+                <div class = 'pagination-go-to-page'>
+                    Go to page:
+                    <input type="number" [(ngModel)] = 'inputPageMedalCount' class = 'pagination-input' min = '1' max = '{{numOfPagesMedalCount}}'>
+                    <button (click) = 'goToPageMedalCount()' class = 'pagination-button'>GO</button>
+                </div>
+                
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

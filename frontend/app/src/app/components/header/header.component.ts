@@ -38,9 +38,9 @@ export class HeaderComponent implements OnInit {
     HeaderComponent.loggedUsername = '';
     HeaderComponent.loggedType = '';
 
-    MenuComponent.menuSelector = 'unregistered';
+    MenuComponent.menuSelector = '';
 
-    this.router.navigate(['login']);
+    this.router.navigate(['']);
     
   }
  

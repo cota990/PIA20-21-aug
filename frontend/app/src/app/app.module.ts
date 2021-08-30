@@ -18,7 +18,6 @@ import { PasswordResetComponent } from './components/password-reset/password-res
 import { MenuComponent } from './components/menu/menu.component';
 import { UnregisteredMenuComponent } from './components/menu/unregistered-menu/unregistered-menu.component';
 import { CountriesComponent } from './components/unregistered/countries/countries.component';
-import { MedalsCountComponent } from './components/unregistered/medals-count/medals-count.component';
 import { OrganizerMenuComponent } from './components/menu/organizer-menu/organizer-menu.component';
 import { DelegateMenuComponent } from './components/menu/delegate-menu/delegate-menu.component';
 import { DelegationLeaderMenuComponent } from './components/menu/delegation-leader-menu/delegation-leader-menu.component';
@@ -41,7 +40,6 @@ import { ParticipantsComponent } from './components/unregistered/participants/pa
     MenuComponent,
     UnregisteredMenuComponent,
     CountriesComponent,
-    MedalsCountComponent,
     OrganizerMenuComponent,
     DelegateMenuComponent,
     DelegationLeaderMenuComponent,

@@ -13,14 +13,12 @@ export class UnregisteredMenuComponent implements OnInit {
   ngOnInit(): void {
     
     this.countriesClicked = true;
-    this.medalsCountClicked = false;
     this.medalsVisualizationClicked = false;
     this.participantsClicked = false;
 
   }
   
   countriesClicked: boolean;
-  medalsCountClicked: boolean;
   medalsVisualizationClicked: boolean;
   participantsClicked: boolean;
 
@@ -29,25 +27,14 @@ export class UnregisteredMenuComponent implements OnInit {
     if (route == 'unregistered/countries') {
       
       this.countriesClicked = true;
-      this.medalsCountClicked = false;
       this.medalsVisualizationClicked = false;
       this.participantsClicked = false;
     
-    }
-    
-    else if (route == 'unregistered/medalsCount') {
-      
-      this.countriesClicked = false;
-      this.medalsCountClicked = true;
-      this.medalsVisualizationClicked = false;
-      this.participantsClicked = false;
-
     }
 
     else if (route == 'unregistered/medalsVisualization') {
       
       this.countriesClicked = false;
-      this.medalsCountClicked = false;
       this.medalsVisualizationClicked = true;
       this.participantsClicked = false;
       
@@ -56,7 +43,6 @@ export class UnregisteredMenuComponent implements OnInit {
     else if (route == 'unregistered/participants') {
       
       this.countriesClicked = false;
-      this.medalsCountClicked = false;
       this.medalsVisualizationClicked = false;
       this.participantsClicked = true;
       
