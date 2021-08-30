@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DelegateComponent } from './components/delegate/delegate.component';
 import { DelegationLeaderComponent } from './components/delegation-leader/delegation-leader.component';
+import { OverviewComponent } from './components/delegation-leader/overview/overview.component';
+import { ParticipantComponent } from './components/delegation-leader/participant/participant.component';
+import { TeamComponent } from './components/delegation-leader/team/team.component';
 import { LoginComponent } from './components/login/login.component';
 import { UnregisteredMenuComponent } from './components/menu/unregistered-menu/unregistered-menu.component';
 import { OrganizerComponent } from './components/organizer/organizer.component';
@@ -16,9 +19,7 @@ const routes: Routes = [
   {path: '', component: LoginComponent},
   {path: 'organizer', component: OrganizerComponent},
   {path: 'delegate', component: DelegateComponent},
-  {path: 'leader', component: DelegationLeaderComponent},
-  // header menu routes
-
+  
   // unregistered routes and paths
   {
     path: 'unregistered', 
@@ -39,6 +40,30 @@ const routes: Routes = [
       {
         path: 'participants',
         component: ParticipantsComponent
+      }
+    ]
+  },
+
+  // national delegation leader routes and paths
+  {
+    path: 'leader', 
+    component: DelegationLeaderComponent,
+    children: [
+      {
+        path: '',
+        component: OverviewComponent
+      },
+      {
+        path: 'overview',
+        component: OverviewComponent
+      },      
+      {
+        path: 'participant',
+        component: ParticipantComponent
+      },
+      {
+        path: 'team',
+        component: TeamComponent
       }
     ]
   },

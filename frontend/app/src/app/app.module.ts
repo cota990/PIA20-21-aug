@@ -23,6 +23,9 @@ import { DelegateMenuComponent } from './components/menu/delegate-menu/delegate-
 import { DelegationLeaderMenuComponent } from './components/menu/delegation-leader-menu/delegation-leader-menu.component';
 import { MedalsVisualizationComponent } from './components/unregistered/medals-visualization/medals-visualization.component';
 import { ParticipantsComponent } from './components/unregistered/participants/participants.component';
+import { OverviewComponent } from './components/delegation-leader/overview/overview.component';
+import { ParticipantComponent } from './components/delegation-leader/participant/participant.component';
+import { TeamComponent } from './components/delegation-leader/team/team.component';
 
 
 @NgModule({
@@ -44,7 +47,10 @@ import { ParticipantsComponent } from './components/unregistered/participants/pa
     DelegateMenuComponent,
     DelegationLeaderMenuComponent,
     MedalsVisualizationComponent,
-    ParticipantsComponent
+    ParticipantsComponent,
+    OverviewComponent,
+    ParticipantComponent,
+    TeamComponent
   ],
   imports: [
     BrowserModule,

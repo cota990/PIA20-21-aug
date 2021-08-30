@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'app-delegation-leader',
@@ -10,6 +11,8 @@ export class DelegationLeaderComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
+    MenuComponent.menuSelector = 'leader';
   }
 
 }
