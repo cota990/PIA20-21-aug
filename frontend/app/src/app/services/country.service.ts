@@ -15,4 +15,13 @@ export class CountryService {
     return this.http.get(`${this.uri}/getAllCountries`);
     
   }
+
+  getCountryByAbbr (country: string) {
+
+    const data = {
+      country: country
+    }
+
+    return this.http.post(`${this.uri}/getCountryByAbbr`, data);
+  }
 }

@@ -7,4 +7,8 @@ countryRouter.route('/getAllCountries').get(
     (req, res) => new CountryControler().getAllCountries(req, res)
 );
 
+countryRouter.route('/getCountryByAbbr').post(
+    (req, res) => new CountryControler().getCountryByAbbr(req, res)
+);
+
 export default countryRouter;

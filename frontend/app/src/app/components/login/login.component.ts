@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
         
         else {
 
-          localStorage.setItem('user', JSON.stringify(user));
+          sessionStorage.setItem('user', JSON.stringify(user));
           if (user.type == 'O')
             this.router.navigate(['organizer']);
           

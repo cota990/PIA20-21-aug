@@ -12,5 +12,18 @@ export class CountryControler {
                 res.json(countries);
         })
     }
-    
+
+    getCountryByAbbr = (req: express.Request, res: express.Response) => {
+
+        let country = req.body.country;
+
+        Country.findOne({'abbr': country}, (err, country) => {
+            
+            if (err) console.log (err);
+            else
+                res.json(country);
+
+        })
+    }
+
 }

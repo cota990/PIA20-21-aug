@@ -1,5 +1,6 @@
 .header {
-    height: 100px;
+    /*height: 100px;*/
+    max-height: 300px;
 }
 
 .header-logo {
@@ -17,8 +18,14 @@
     height: 50px;
 }
 
+.menu-div {
+    /*height: 50px;*/
+    max-height: 200px;
+}
+
 .double-div {
-    height: 100px;
+    /*height: 100px;*/
+    max-height: 250px;
     position: relative;
 }
 

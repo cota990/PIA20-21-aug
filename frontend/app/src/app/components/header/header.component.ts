@@ -40,6 +40,8 @@ export class HeaderComponent implements OnInit {
 
     MenuComponent.menuSelector = '';
 
+    sessionStorage.removeItem('user');
+
     this.router.navigate(['']);
     
   }

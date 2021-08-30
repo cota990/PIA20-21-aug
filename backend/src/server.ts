@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import userRouter from './routes/user.routes';
 import countryRouter from './routes/country.routes';
 import sportRouter from './routes/sport.routes';
+import participantRouter from './routes/participant.routes';
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,7 @@ const router = express.Router();
 router.use('/users', userRouter);
 router.use('/countries', countryRouter);
 router.use('/sports', sportRouter);
+router.use('/participants', participantRouter);
 
 app.use('/', router);
 app.listen(4000, () => console.log(`Express server running on port 4000`));
