@@ -16,17 +16,21 @@
 
             </div>
 
-            <div class = 'regular-div menu header-text'>
+            <div class = 'regular-div'>
 
-                MENU
+                <app-menu></app-menu>
 
             </div>
              
         </div>
 
-        <div *ngIf = 'getDisplayUserPanel()' class = 'col-sm-12 col-md-2 regular-div'>
+        <div *ngIf = 'getDisplayUserPanel()' class = 'col-sm-12 col-md-2 double-div user-info-container'>
             
             <img src='../../../assets/user.png' class = 'user-icon'>
+
+            <span bind-innerHTML = 'getLoggedUsername()'></span>
+
+            <button (click) = 'signOut()'>Sign out</button>
 
         </div>
 

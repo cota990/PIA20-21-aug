@@ -40,9 +40,11 @@ export class LoginComponent implements OnInit {
           else if (user.type == 'L')
             this.router.navigate(['leader']);
 
-        }
+          HeaderComponent.displayUserPanel = true;
+          HeaderComponent.loggedUsername = user.username;
+          HeaderComponent.loggedType = user.type;
 
-        HeaderComponent.displayUserPanel = true;
+        }
       
       }
 

@@ -1,0 +1,31 @@
+<div class='container-fluid'>
+
+    <div class='row'>
+        
+        <div class = 'col-sm-6 col-md-3 menu-text regular-div' (click) = 'setRoute("unregistered/countries")' [ngClass] = 'countriesClicked ? "menu-container-clicked" : "menu-container"' >
+            
+            Participating countries
+        
+        </div>
+
+        <div class = 'col-sm-6 col-md-3 menu-text regular-div' (click) = 'setRoute("unregistered/medalsCount")' [ngClass] = 'medalsCountClicked ? "menu-container-clicked" : "menu-container"'>
+            
+            Medal count
+        
+        </div>
+
+        <div class = 'col-sm-6 col-md-3 menu-text regular-div' (click) = 'setRoute("unregistered/medalsVisualization")' [ngClass] = 'medalsVisualizationClicked ? "menu-container-clicked" : "menu-container"'>
+            
+            Medal visualization
+        
+        </div>
+
+        <div class = 'col-sm-6 col-md-3 menu-text regular-div' (click) = 'setRoute("unregistered/participants")' [ngClass] = 'participantsClicked ? "menu-container-clicked" : "menu-container"'>
+            
+            Participants
+        
+        </div>
+    
+    </div>
+
+</div>

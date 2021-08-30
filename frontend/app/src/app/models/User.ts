@@ -1,5 +1,5 @@
 export class User {
-    username: String;
-    type: String;
+    username: string;
+    type: string;
     approved: boolean;
 }

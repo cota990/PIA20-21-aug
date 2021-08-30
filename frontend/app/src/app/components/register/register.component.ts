@@ -13,10 +13,11 @@ export class RegisterComponent implements OnInit {
   constructor(private userService: UserService, private countryService: CountryService) { }
 
   ngOnInit(): void {
-      this.countryService.getAllCountries().subscribe( (res:Country[]) => {
+      
+    this.countryService.getAllCountries().subscribe( (res:Country[]) => {
 
         this.countries = res;
-        
+
       });
   }
 

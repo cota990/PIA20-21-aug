@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Country } from 'src/app/models/Country';
 import { CountryService } from 'src/app/services/country.service';
+import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'app-unregistered',
@@ -9,9 +11,13 @@ import { CountryService } from 'src/app/services/country.service';
 })
 export class UnregisteredComponent implements OnInit {
 
-  constructor(private countryService:CountryService) { }
+  constructor(private countryService:CountryService, private router: Router) { }
 
   ngOnInit(): void {
+
+    //this.router.navigate([{outlets: {menuRouterOutlet: 'menuUnregistered'}}]);
+
+    MenuComponent.menuSelector = 'unregistered';
 
     this.nameSortDirection = '';
     this.numOfParticipantsSortDirection = '';

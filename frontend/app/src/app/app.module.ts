@@ -15,6 +15,15 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RegisterComponent } from './components/register/register.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { UnregisteredMenuComponent } from './components/menu/unregistered-menu/unregistered-menu.component';
+import { CountriesComponent } from './components/unregistered/countries/countries.component';
+import { MedalsCountComponent } from './components/unregistered/medals-count/medals-count.component';
+import { OrganizerMenuComponent } from './components/menu/organizer-menu/organizer-menu.component';
+import { DelegateMenuComponent } from './components/menu/delegate-menu/delegate-menu.component';
+import { DelegationLeaderMenuComponent } from './components/menu/delegation-leader-menu/delegation-leader-menu.component';
+import { MedalsVisualizationComponent } from './components/unregistered/medals-visualization/medals-visualization.component';
+import { ParticipantsComponent } from './components/unregistered/participants/participants.component';
 
 
 @NgModule({
@@ -28,7 +37,16 @@ import { PasswordResetComponent } from './components/password-reset/password-res
     HeaderComponent,
     FooterComponent,
     RegisterComponent,
-    PasswordResetComponent
+    PasswordResetComponent,
+    MenuComponent,
+    UnregisteredMenuComponent,
+    CountriesComponent,
+    MedalsCountComponent,
+    OrganizerMenuComponent,
+    DelegateMenuComponent,
+    DelegationLeaderMenuComponent,
+    MedalsVisualizationComponent,
+    ParticipantsComponent
   ],
   imports: [
     BrowserModule,
