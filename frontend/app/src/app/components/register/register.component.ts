@@ -14,8 +14,8 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.country = 'Select country from the list';
-      
+    this.errorsFound = '';
+
     this.countryService.getAllCountries().subscribe( (res:Country[]) => {
 
         this.countries = res;
@@ -35,13 +35,57 @@ export class RegisterComponent implements OnInit {
 
   countries: Country[];
 
+  errorsFound: string
+
   register () {
 
-    this.userService.register(this.username, this.password, this.passwordConfirmation, this.mail, this.firstname, this.lastname, this.country, this.type).subscribe(res => {
+    if (this.username == undefined || this.username == ''
+          || this.password == undefined || this.password == ''
+          || this.passwordConfirmation == undefined || this.passwordConfirmation == ''
+          || this.mail == undefined || this.mail == ''
+          || this.firstname == undefined || this.firstname == ''
+          || this.lastname == undefined || this.lastname == ''
+          || this.country == undefined || this.country == ''
+          || this.type == undefined || this.type == '')
+      
+      this.errorsFound = 'All fields are required';
+    
+    else if (this.password != this.passwordConfirmation)
+          
+      this.errorsFound = 'Password confirmation does not match password';
 
-      console.log (res);
-      console.log (res['status']);
-    })
+    else {
+
+      this.errorsFound = '';
+
+      this.userService.register(this.username, this.password, this.passwordConfirmation, this.mail, this.firstname, this.lastname, this.country, this.type).subscribe(res => {
+
+        if (res['message'] == 'Errors found') {
+          
+          if (res['mailTaken'] != '')
+            this.errorsFound += res['mailTaken'] + '. ';
+
+          if (res['usernameTaken'] != '')
+            this.errorsFound += res['usernameTaken'] + '. ';
+
+          if (res['leaderExists'] != '')
+            this.errorsFound += res['leaderExists'] + '. ';
+
+          if (res['passwordRules'] != '')
+            this.errorsFound += res['passwordRules'];
+          
+        }
+
+        else if (res['message'] == 'There was an error while processing your request. Please try again later')
+          this.errorsFound = 'There was an error while processing your request. Please try again later.';
+
+        else if (res['message'] == 'Request is being processed; awaiting confirmation')
+          this.errorsFound = 'Registered successfully; awaiting confirmation from organizer.';
+
+      })
+
+    }
+    
   }
 
 }

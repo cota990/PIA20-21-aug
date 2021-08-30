@@ -39,14 +39,15 @@ export class UserControler {
         //      if mail is already taken?
         //      if username is already taken?
         //      if national leader, check if already exists?
+        //      password and password confirm match?
         //      check password rules
 
-        User.find({$or: [{'mail': mail}, {'username': 'username'}, {'country': country, 'type': type}]}, (err, users) => {
+        User.find({$or: [{'mail': mail}, {'username': username}, {'country': country, 'type': type}]}, (err, users) => {
 
             if (err) console.log (err);
 
             else {
-            
+
                 users.forEach ( (user)  => {
 
                     let foundUser = user.toObject();
@@ -72,41 +73,64 @@ export class UserControler {
                     }
                 })
 
-                //let passwordRegex = "^(?=.*[a-z]{3,})(?=.*[A-Z])(?=.*\d{2,})(?=.*[@$!%*?&]{2,})[A-Za-z\d@$!%*?&]{8,12}$";
-                let passwordRegexLength = new RegExp ("^[A-Za-z0-9@$!%*?&]{8,12}$");
-                //let passwordRegexLength = new RegExp ("(?=.{8,12})");
+                if (password.length < 8 || password.length > 12) {
 
-                if (!passwordRegexLength.test(password)) {
                     errorFound = true;
                     errorReport.passwordRules += 'Password must be between 8 and 12 characters long. ';
+
                 }
 
-                let passwordRegexNumOfCapitals = new RegExp ("(?=.*[A-Z])");
+                let smallLettersCounter = 0;
+                let capitalLettersCounter = 0;
+                let digitsCounter = 0;
+                let specialCharactersCounter = 0;
 
-                if (!passwordRegexNumOfCapitals.test(password)) {
-                    errorFound = true;
-                    errorReport.passwordRules += 'Password must have at least one capital letter. ';
+                let smallLetterRegex = new RegExp ('[a-z]');
+                let capitalLetterRegex = new RegExp ('[A-Z]');
+                let digitRegex = new RegExp ('[0-9]');
+                let specialCharRegex = new RegExp ('[!@#$%^&*]');
+
+                for (let i = 0; i < password.length; i++) {
+
+                    let character = password.charAt (i);
+
+                    if (smallLetterRegex.test(character))
+                        smallLettersCounter++;
+                    if (capitalLetterRegex.test(character))
+                        capitalLettersCounter++;
+                    if (digitRegex.test(character))
+                        digitsCounter++;
+                    if (specialCharRegex.test(character))
+                        specialCharactersCounter++;
+
                 }
 
-                let passwordRegexNumOfSmallLetters = new RegExp ("(?=.*[a-z]){3,}");
+                if (smallLettersCounter < 3) {
 
-                if (!passwordRegexNumOfSmallLetters.test(password)) {
                     errorFound = true;
                     errorReport.passwordRules += 'Password must have at least three small letters. ';
+
                 }
 
-                let passwordRegexNumOfDigits = new RegExp ("(?=.*[0-9]){2,}");
+                if (capitalLettersCounter < 1) {
 
-                if (!passwordRegexNumOfDigits.test(password)) {
+                    errorFound = true;
+                    errorReport.passwordRules += 'Password must have at least one capital letter. ';
+
+                }
+
+                if (digitsCounter < 2) {
+
                     errorFound = true;
                     errorReport.passwordRules += 'Password must have at least two digits. ';
+
                 }
 
-                let passwordRegexNumOfSpecialCharacters = new RegExp ("(?=.*[@$!%*?&]){2,}");
+                if (specialCharactersCounter < 2) {
 
-                if (!passwordRegexNumOfSpecialCharacters.test(password)) {
                     errorFound = true;
                     errorReport.passwordRules += 'Password must have at least two special characters. ';
+
                 }
 
                 if (errorFound)

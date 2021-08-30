@@ -2,6 +2,10 @@
 
     <div class='row register-row'>
 
+        <div *ngIf = 'errorsFound != ""' class = 'col-sm-12 status-report'>
+            {{errorsFound}}
+        </div>
+
         <div class = 'col-sm-1 col-md-3'></div>
 
         <div class = 'col-sm-10 col-md-6 register-page-panel'>
@@ -12,36 +16,42 @@
 
                     <div class = 'col-sm-12 input-field-container'>
 
+                        <span class = 'select-span'>Username: </span>
                         <input type='text' name = 'username' placeholder='Enter username...' [(ngModel)]='username' class = 'input-field'>
 
                     </div>
 
                     <div class = 'col-sm-12 input-field-container'>
 
+                        <span class = 'select-span'>Password: </span>
                         <input type='password' name = 'password' placeholder='Enter password...' [(ngModel)]='password' class = 'input-field'>
 
                     </div>
 
                     <div class = 'col-sm-12 input-field-container'>
 
+                        <span class = 'select-span'>Confirm password: </span>
                         <input type='password' name = 'passwordConfirmation' placeholder='Confirm password...' [(ngModel)]='passwordConfirmation' class = 'input-field'>
 
                     </div>
 
                     <div class = 'col-sm-12 input-field-container'>
 
+                        <span class = 'select-span'>E-mail: </span>
                         <input type='text' name = 'mail' placeholder='Enter mail address...' [(ngModel)]='mail' class = 'input-field'>
 
                     </div>
 
                     <div class = 'col-sm-12 input-field-container'>
 
+                        <span class = 'select-span'>Firstname: </span>
                         <input type='text' name = 'firstname' placeholder='Enter firstname...' [(ngModel)]='firstname' class = 'input-field'>
 
                     </div>
 
                     <div class = 'col-sm-12 input-field-container'>
 
+                        <span class = 'select-span'>Lastname: </span>
                         <input type='text' name = 'lastname' placeholder='Enter lastname...' [(ngModel)]='lastname' class = 'input-field'>
 
                     </div>
