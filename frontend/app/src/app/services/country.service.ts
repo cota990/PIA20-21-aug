@@ -8,11 +8,11 @@ export class CountryService {
 
   constructor(private http:HttpClient) { }
 
-  uri='http://localhost:4000';
+  uri='http://localhost:4000/countries';
 
   getAllCountries () {
 
-    return this.http.get(`${this.uri}/countries/getAllCountries`);
+    return this.http.get(`${this.uri}/getAllCountries`);
     
   }
 }
