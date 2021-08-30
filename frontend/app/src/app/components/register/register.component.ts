@@ -13,6 +13,8 @@ export class RegisterComponent implements OnInit {
   constructor(private userService: UserService, private countryService: CountryService) { }
 
   ngOnInit(): void {
+
+    this.country = 'Select country from the list';
       
     this.countryService.getAllCountries().subscribe( (res:Country[]) => {
 

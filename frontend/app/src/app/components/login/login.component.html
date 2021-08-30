@@ -1,33 +1,44 @@
-<div class='container-fluid'>
+<div class='container-fluid login-container'>
 
-    <div class='row'>
+    <div class='row login-row'>
         
         <div class = 'col-sm-1 col-md-3'></div>
 
-        <div class = 'col-sm-10 col-md-6'>
+        <div class = 'col-sm-10 col-md-6 login-page-panel'>
+
+            <div class = 'container-fluid'>
             
-            <div class = 'sign-in-panel'>
+                <div class = 'sign-in-panel row'>
 
-                <input type='text' placeholder='Enter username...' [(ngModel)]='username'>
+                    <div class = 'col-sm-12 input-field-container'>
+                        
+                        <input type='text' placeholder='Enter username...' [(ngModel)]='username' class = 'input-field'>
+                    
+                    </div>
 
-                <input type='password' placeholder='Enter password...' [(ngModel)]='password'>
+                    <div class = 'col-sm-12 input-field-container'>
 
-                <button (click)='signIn()'>Sign in</button>
+                        <input type='password' placeholder='Enter password...' [(ngModel)]='password' class = 'input-field'>
 
-            </div>
+                    </div>
 
-            <div>
-                <a routerLink = 'password-reset'>Change password</a>
-            </div>
+                    <div class = 'col-sm-12 button-container'>
 
-            <div>
+                        <button (click)='signIn()' class = 'login-button'>Sign in</button>
+                        <button (click)='register()' class = 'login-button'>Register</button>
 
-                <button (click)='register()'>Register</button>
-            
-            </div>
+                    </div>
 
-            <div>
-                <a routerLink = "unregistered/medalsCount">Continue unregistered</a>
+                    <div class = 'col-sm-12 link-container'>
+
+                        <a routerLink = 'password-reset' class = 'login-link'>Change password</a>
+
+                        <a routerLink = "unregistered" class = 'login-link'>Browse unregistered</a>
+
+                    </div>
+
+                </div>
+
             </div>
             
         </div>
