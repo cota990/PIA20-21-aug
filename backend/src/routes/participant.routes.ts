@@ -7,4 +7,8 @@ participantRouter.route('/getAllParticipantsForCountry').post(
     (req, res) => new ParticipantControler().getAllParticipantsForCountry(req, res)
 );
 
+participantRouter.route('/submitParticipant').post(
+    (req, res) => new ParticipantControler().submitParticipant(req, res)
+);
+
 export default participantRouter;

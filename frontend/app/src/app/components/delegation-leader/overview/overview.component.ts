@@ -50,11 +50,11 @@ export class OverviewComponent implements OnInit {
 
         if (!foundSport) {
           let newPartSport: ParticipantPerSport = new ParticipantPerSport();
-          newPartSport.participants = 0;
+          newPartSport.participants = 1;
           newPartSport.sport = participant.sport;
 
           this.participantsSports.push (newPartSport);
-          
+
         }
       })
 

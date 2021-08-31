@@ -1,10 +1,31 @@
-<h2>Number of participants for {{country.name}}: {{numOfParticipants}}</h2>
-<div *ngFor = 'let sport of allSports'>
-    <span>{{sport.name}} </span>
-    <span>{{sport.discipline}} </span>
-    <span>{{sport.type}}</span>
-</div>
+<div class='container-fluid overview-container'>
 
-<div class='container-fluid'>
+    <div class='row overview-row'>
+
+        <div class = 'col-sm-12'>
+
+            <h3>Number of participants for {{country.name}}: {{numOfParticipants}}</h3>
+
+            <table *ngIf = 'participantsSports.length > 0' >
+
+                <tr>
+                    
+                    <th>Sport</th>
+                    <th>Number of participants</th>
+
+                </tr>
+
+                <tr *ngFor = 'let ps of participantsSports'>
+
+                    <td>{{ps.sport}}</td>
+                    <td>{{ps.participants}}</td>
+
+                </tr>
+            
+            </table>
+
+        </div>
+        
+    </div>
 
 </div>

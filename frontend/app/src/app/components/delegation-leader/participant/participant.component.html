@@ -1,1 +1,84 @@
-<p>participant works!</p>
+<div class='container-fluid participant-submit-container'>
+
+    <div class='row participant-submit-row'>
+
+        <div *ngIf = 'errorsFound != ""' class = 'col-sm-12 status-report'>
+            {{errorsFound}}
+        </div>
+
+        <div class = 'col-sm-1 col-md-3'></div>
+
+        <div class = 'col-sm-10 col-md-6 participant-submit-page-panel'>
+
+            <div class = 'container-fluid'>
+
+                <div class = 'participant-submit-panel row'>
+
+                    <div class = 'col-sm-12 input-field-container'>
+
+                        <span class = 'select-span'>Participant firstname: </span>
+                        <input type='text' name = 'firstname' placeholder='Enter firstname...' [(ngModel)]='firstname' class = 'input-field'>
+
+                    </div>
+
+                    <div class = 'col-sm-12 input-field-container'>
+
+                        <span class = 'select-span'>Participant lastname: </span>
+                        <input type='text' name = 'lastname' placeholder='Enter lastname...' [(ngModel)]='lastname' class = 'input-field'>
+
+                    </div>
+
+                    <div class = 'col-sm-12 radio-button-container'>
+
+                        <span class = 'radio-span'>Select gender: </span>
+                        <input type='radio' value = 'M' name = 'gender' [(ngModel)]='gender' required> Male 
+                        <input type='radio' value = 'F' name = 'gender' [(ngModel)]='gender' required> Female 
+
+                    </div>
+
+                    <div class = 'col-sm-12 select-container'>
+                        
+                        <span class = 'select-span'>Select sport: </span>
+                        <select name = 'sport' [(ngModel)] = 'sport' class = 'select-field'>
+                            <option *ngFor = 'let sd of sportDisciplines' label={{sd.sport}} value={{sd.sport}}></option>
+                        </select>
+
+                    </div>
+
+                    
+                    <div *ngIf = 'getDisciplinesFromSelectedSport() != undefined'
+                         class = 'col-sm-12 checkbox-container container-fluid'>
+
+                         <div class = 'row'>
+
+                            <div class = 'col-sm-12'>
+
+                                <span class = 'select-span'>Select discipline: </span>
+
+                            </div>
+                            
+                            <div *ngFor = 'let d of disciplinesOptions' class = 'col-sm-4'>
+                                <input type="checkbox" [(ngModel)] = 'd.selected'> {{d.discipline}}
+                            </div>
+
+                         </div>
+                        
+                    </div>
+
+                    <div class = 'col-sm-12 button-container'>
+                        
+                        <button (click)='submit()' class = 'submit-button'>Submit</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class = 'col-sm-1 col-md-3'></div>
+
+    </div>
+
+</div>
