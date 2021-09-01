@@ -18,6 +18,7 @@ export class UserService {
     }
 
     return this.http.post(`${this.uri}/login`, data);
+
   }
 
   register (username, password, passwordConfirmation, mail, firstname, lastname, country, type) {
@@ -34,5 +35,33 @@ export class UserService {
     }
 
     return this.http.post(`${this.uri}/register`, data);
+  
   }
+
+  pendingRequests () {
+
+    return this.http.get(`${this.uri}/pendingRequests`);
+
+  }
+
+  approveRequest (username: string) {
+
+    const data = {
+      username: username
+    }
+
+    return this.http.post(`${this.uri}/approveRequest`, data);
+
+  }
+
+  rejectRequest (username: string) {
+
+    const data = {
+      username: username
+    }
+
+    return this.http.post(`${this.uri}/rejectRequest`, data);
+
+  }
+
 }

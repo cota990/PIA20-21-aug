@@ -27,6 +27,11 @@ let sport = new Schema ({
     // minimum of allowed players for team sports
     minPlayers: {
         type: Number
+    },
+
+    // added to current olympics by organizer
+    currentInOlympics: {
+        type: Boolean
     }
 });
 

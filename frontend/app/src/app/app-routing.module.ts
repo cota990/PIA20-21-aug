@@ -7,7 +7,11 @@ import { ParticipantComponent } from './components/delegation-leader/participant
 import { TeamComponent } from './components/delegation-leader/team/team.component';
 import { LoginComponent } from './components/login/login.component';
 import { UnregisteredMenuComponent } from './components/menu/unregistered-menu/unregistered-menu.component';
+import { CompetitionsComponent } from './components/organizer/competitions/competitions.component';
 import { OrganizerComponent } from './components/organizer/organizer.component';
+import { RecordsComponent } from './components/organizer/records/records.component';
+import { RequestsComponent } from './components/organizer/requests/requests.component';
+import { SportsComponent } from './components/organizer/sports/sports.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { RegisterComponent } from './components/register/register.component';
 import { CountriesComponent } from './components/unregistered/countries/countries.component';
@@ -17,7 +21,6 @@ import { UnregisteredComponent } from './components/unregistered/unregistered.co
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
-  {path: 'organizer', component: OrganizerComponent},
   {path: 'delegate', component: DelegateComponent},
   
   // unregistered routes and paths
@@ -40,6 +43,34 @@ const routes: Routes = [
       {
         path: 'participants',
         component: ParticipantsComponent
+      }
+    ]
+  },
+
+  // organizer routes and paths
+  {
+    path: 'organizer', 
+    component: OrganizerComponent,
+    children: [
+      {
+        path: '',
+        component: SportsComponent
+      },
+      {
+        path: 'sports',
+        component: SportsComponent
+      },      
+      {
+        path: 'competitions',
+        component: CompetitionsComponent
+      },
+      {
+        path: 'requests',
+        component: RequestsComponent
+      },
+      {
+        path: 'records',
+        component: RecordsComponent
       }
     ]
   },

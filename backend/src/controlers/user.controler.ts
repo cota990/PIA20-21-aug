@@ -164,4 +164,53 @@ export class UserControler {
         })
 
     }
+
+    pendingRequests = (req: express.Request, res: express.Response) => {
+
+        User.find({'approved': false}, (err, users) => {
+
+            if (err) console.log (err);
+            else
+                return res.json (users);
+
+        })
+    }
+
+    approveRequest = (req: express.Request, res: express.Response) => {
+
+        let username = req.body.username;
+
+        User.findOneAndUpdate({'username': username}, {'approved': true}, (err, user) => {
+
+            if (err) console.log (err);
+            else {
+                
+                if (user)
+                    return res.status(200).json({'message': 'Account approved'});
+                else
+                    return res.status(200).json({'message': 'Something went wrong. Please try again later'});
+
+            }
+        });
+
+    }
+
+    rejectRequest = (req: express.Request, res: express.Response) => {
+
+        let username = req.body.username;
+
+        User.findOneAndDelete({'username': username}, (err, user) => {
+
+            if (err) console.log (err);
+            else {
+                
+                if (user)
+                    return res.status(200).json({'message': 'Account rejected'});
+                else
+                    return res.status(200).json({'message': 'Something went wrong. Please try again later'});
+
+            }
+        });
+
+    }
 }

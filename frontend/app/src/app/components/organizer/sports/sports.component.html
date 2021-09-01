@@ -1,6 +1,6 @@
-<div class='container-fluid team-submit-container'>
+<div class='container-fluid sports-container'>
 
-    <div class='row team-submit-row'>
+    <div class='row sports-row'>
 
         <div *ngIf = 'errorsFound != ""' class = 'col-sm-12 status-report'>
             
@@ -10,11 +10,11 @@
 
         <div class = 'col-sm-1 col-md-3'></div>
 
-        <div class = 'col-sm-10 col-md-6 team-submit-page-panel'>
+        <div class = 'col-sm-10 col-md-6 sports-page-panel'>
 
             <div class = 'container-fluid'>
 
-                <div class = 'team-submit-panel row'>
+                <div class = 'sports-panel row'>
 
                     <div class = 'col-sm-12 select-container'>
                         
@@ -38,14 +38,6 @@
                         
                     </div>
 
-                    <div class = 'col-sm-12 radio-button-container'>
-
-                        <span class = 'radio-span'>Select gender: </span>
-                        <input type='radio' value = 'M' name = 'gender' [(ngModel)]='gender' required> Male 
-                        <input type='radio' value = 'F' name = 'gender' [(ngModel)]='gender' required> Female 
-
-                    </div>
-
                     <div class = 'col-sm-12 button-container'>
                         
                         <button (click)='submit()' class = 'submit-button'>Submit</button>
@@ -59,6 +51,30 @@
         </div>
 
         <div class = 'col-sm-1 col-md-3'></div>
+
+        <h3>List of added sports and disciplines</h3>
+
+        <div class = 'col-sm-12 table-container'>
+
+            <table *ngIf = 'addedSportDisciplines.length > 0' >
+
+                <tr>
+                    
+                    <th>Sport</th>
+                    <th>Disciplines</th>
+
+                </tr>
+
+                <tr *ngFor = 'let asd of addedSportDisciplines'>
+
+                    <td>{{asd.sport}}</td>
+                    <td>{{asd.disciplinesString}}</td>
+
+                </tr>
+            
+            </table>
+
+        </div>
 
     </div>
 

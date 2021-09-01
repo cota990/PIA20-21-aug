@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Country } from 'src/app/models/Country';
 import { Participant } from 'src/app/models/Participant';
-import { ParticipantPerSport } from 'src/app/models/ParticipantPerSport';
 import { Sport } from 'src/app/models/Sport';
 import { CountryService } from 'src/app/services/country.service';
 import { ParticipantService } from 'src/app/services/participant.service';
 import { SportService } from 'src/app/services/sport.service';
+import { ParticipantPerSport } from 'src/app/utils/ParticipantPerSport';
 
 @Component({
   selector: 'app-overview',
@@ -24,7 +24,7 @@ export class OverviewComponent implements OnInit {
       this.country = country;
     })
 
-    this.sportsService.getAllSports().subscribe((sports: Sport[]) => {
+    this.sportsService.getAllSportsInOlympics().subscribe((sports: Sport[]) => {
       this.allSports = sports;
     })
 

@@ -1,4 +1,4 @@
-.team-submit-container {
+.sports-container {
     height: 760px;
     max-height: 760px;
     min-height: 300px;
@@ -6,7 +6,7 @@
     align-items: center;
 }
 
-.team-submit-row {
+.sports-row {
     width: 100%;
     height: 600px;
     display: flex;
@@ -14,13 +14,13 @@
 }
 
 .status-report {
-    height: 70px;
+    height: 30px;
     width: 100%;
     text-align: center;
     color: red;
 }
 
-.team-submit-page-panel {
+.sports-page-panel {
     background-color: lightgrey;
 
     border-top: 15px inset;
@@ -31,14 +31,16 @@
     display: flex;
     align-items: center;
 
-    height: 600px;
+    height: 300px;
 }
 
-.team-submit-panel {
+.sports-panel {
     height: 150px;
     display: flex;
     justify-content: center;
 }
+
+
 
 .select-container {
 
@@ -68,21 +70,7 @@
 
 }
 
-.radio-button-container {
 
-    width: 80%;
-    height: 30px;
-}
-
-.radio-span {
-    width: 50%;
-    height: 25px;
-    display: flex;
-    float: left;
-    justify-content: center;
-    margin-right: 15px;
-    /*padding-left: 25px;*/
-}
 
 .button-container {
 
@@ -97,4 +85,37 @@
     width: 20%;
     margin-left: 20px;
     margin-right: 20px;
+}
+
+
+
+table, th, td {
+    border: 1px solid red;
+    text-align: center;
+}
+
+table {
+    width: 90%;    
+}
+
+th, td {
+    padding: 10px;
+}
+
+th {
+    background-color: red;
+    color: white;
+}
+
+tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+.table-container {
+    max-height: 310px;
+    overflow: auto;
 }

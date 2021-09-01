@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { DisciplineSelect } from 'src/app/models/DisciplineSelect';
+import { DisciplineSelect } from 'src/app/utils/DisciplineSelect';
 import { Sport } from 'src/app/models/Sport';
-import { SportDiscipline } from 'src/app/models/SportDiscipline';
 import { ParticipantService } from 'src/app/services/participant.service';
 import { SportService } from 'src/app/services/sport.service';
+import { SportDiscipline } from 'src/app/utils/SportDiscipline';
 
 @Component({
   selector: 'app-participant',
@@ -21,7 +21,7 @@ export class ParticipantComponent implements OnInit {
     let user = JSON.parse(sessionStorage.getItem('user'));
     this.country = user.country;
 
-    this.sportsService.getAllSports().subscribe((sports: Sport[]) => {
+    this.sportsService.getAllSportsInOlympics().subscribe((sports: Sport[]) => {
       
       this.allSports = sports;
       this.sportDisciplines = [];

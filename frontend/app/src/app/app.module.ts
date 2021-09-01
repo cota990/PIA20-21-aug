@@ -26,6 +26,10 @@ import { ParticipantsComponent } from './components/unregistered/participants/pa
 import { OverviewComponent } from './components/delegation-leader/overview/overview.component';
 import { ParticipantComponent } from './components/delegation-leader/participant/participant.component';
 import { TeamComponent } from './components/delegation-leader/team/team.component';
+import { SportsComponent } from './components/organizer/sports/sports.component';
+import { CompetitionsComponent } from './components/organizer/competitions/competitions.component';
+import { RequestsComponent } from './components/organizer/requests/requests.component';
+import { RecordsComponent } from './components/organizer/records/records.component';
 
 
 @NgModule({
@@ -50,7 +54,11 @@ import { TeamComponent } from './components/delegation-leader/team/team.componen
     ParticipantsComponent,
     OverviewComponent,
     ParticipantComponent,
-    TeamComponent
+    TeamComponent,
+    SportsComponent,
+    CompetitionsComponent,
+    RequestsComponent,
+    RecordsComponent
   ],
   imports: [
     BrowserModule,

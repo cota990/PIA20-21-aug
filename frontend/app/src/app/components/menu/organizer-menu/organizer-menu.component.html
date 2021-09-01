@@ -1,1 +1,31 @@
-<p>organizer-menu works!</p>
+<div class='container-fluid'>
+
+    <div class='row'>
+        
+        <div class = 'col-sm-6 col-md-3 menu-text regular-div' (click) = 'setRoute("organizer/sports")' [ngClass] = 'sportsClicked ? "menu-container-clicked" : "menu-container"' >
+            
+            Sports&Disciplines
+        
+        </div>
+
+        <div class = 'col-sm-6 col-md-3 menu-text regular-div' (click) = 'setRoute("organizer/competitions")' [ngClass] = 'competitionsClicked ? "menu-container-clicked" : "menu-container"'>
+            
+            Competitions
+        
+        </div>
+
+        <div class = 'col-sm-6 col-md-3 menu-text regular-div' (click) = 'setRoute("organizer/requests")' [ngClass] = 'requestsClicked ? "menu-container-clicked" : "menu-container"'>
+            
+            Pending requests
+        
+        </div>
+
+        <div class = 'col-sm-6 col-md-3 menu-text regular-div' (click) = 'setRoute("organizer/records")' [ngClass] = 'recordsClicked ? "menu-container-clicked" : "menu-container"'>
+            
+            Olympic records
+        
+        </div>
+    
+    </div>
+
+</div>

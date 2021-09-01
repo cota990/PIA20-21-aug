@@ -1,0 +1,45 @@
+<div class='container-fluid requests-container'>
+
+    <div class='row requests-row'>
+
+        <div class = 'col-sm-12'>
+
+            <table *ngIf = 'requests.length > 0' >
+
+                <tr>
+                    
+                    <th>Username</th>
+                    <th>E mail</th>
+                    <th>Firstname</th>
+                    <th>Lasttname</th>
+                    <th>Country</th>
+                    <th>Type</th>
+                    <th>Action</th>
+
+                </tr>
+
+                <tr *ngFor = 'let r of requests'>
+
+                    <td>{{r.username}}</td>
+                    <td>{{r.mail}}</td>
+                    <td>{{r.firstname}}</td>
+                    <td>{{r.lastname}}</td>
+                    <td>{{r.country}}</td>
+                    <td *ngIf = ' r.type == "L"'>National Delegation Leader</td>
+                    <td *ngIf = ' r.type == "D"'>Delegate</td>
+                    <td class = 'button-container'>
+                        <button (click) = 'accept (r.username)' class = 'accept-button'>Accept</button>    
+                        <button (click) = 'reject (r.username)' class = 'reject-button'>Reject</button>
+                    </td>
+
+                </tr>
+            
+            </table>
+
+            <span *ngIf = 'requests.length == 0'>No pending requests</span>
+
+        </div>
+        
+    </div>
+
+</div>
