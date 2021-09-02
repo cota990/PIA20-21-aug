@@ -192,7 +192,7 @@
                             </div>
                        
                             <div *ngFor = 'let t of teamsOptions' class = 'col-sm-12'>
-                                <input type="checkbox" [(ngModel)] = 't.selected'> <img [src]="'/assets/' + t.country.toLowerCase() + '.jpg'" style="width: 40px; margin-left: 10px;"> {{t.country}} 
+                                <input type="checkbox" [(ngModel)] = 't.selected'> <img [src]="'/assets/' + t.country.toLowerCase() + '.jpg'" style="width: 40px; margin-left: 10px;"> {{t.countryName}} 
                             </div>
         
                         </div>

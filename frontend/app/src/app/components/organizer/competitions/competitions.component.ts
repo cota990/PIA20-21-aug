@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Country } from 'src/app/models/Country';
 import { Location } from 'src/app/models/Location';
 import { Participant } from 'src/app/models/Participant';
 import { ScoreFormat } from 'src/app/models/ScoreFormat';
 import { Sport } from 'src/app/models/Sport';
 import { Team } from 'src/app/models/Team';
 import { User } from 'src/app/models/User';
+import { CountryService } from 'src/app/services/country.service';
 import { LocationService } from 'src/app/services/location.service';
 import { ParticipantService } from 'src/app/services/participant.service';
 import { ScoreFormatService } from 'src/app/services/score-format.service';
@@ -26,7 +28,8 @@ export class CompetitionsComponent implements OnInit {
               private locationService: LocationService,
               private userService: UserService,
               private participantsService: ParticipantService,
-              private teamService: TeamService) { }
+              private teamService: TeamService,
+              private countryService: CountryService) { }
 
   ngOnInit(): void {
 
@@ -206,6 +209,13 @@ export class CompetitionsComponent implements OnInit {
     this.locationOptions = [];
     this.displayTeams = false;
     this.displayParticipants = false;
+    this.locations = [];
+    this.startDate = undefined;
+    this.endDate = undefined;
+    this.format = undefined;
+    this.allowedResults = undefined;
+    this.phases = undefined;
+    this.rounds = undefined;
 
   }
 
@@ -443,11 +453,24 @@ export class CompetitionsComponent implements OnInit {
 
       this.teamsOptions = teams;
 
-      this.teamsOptions.forEach ((t) => {
+      this.countryService.getAllCountries().subscribe((countries: Country[]) => {
 
-        t.selected = false;
+        this.teamsOptions.forEach ((t) => {
+
+          t.selected = false;
+
+          countries.forEach ((country) => {
+
+            if (country.abbr == t.country)
+              t.countryName = country.name;
+
+          });
+  
+        });
 
       });
+
+
 
     });
 
@@ -455,6 +478,96 @@ export class CompetitionsComponent implements OnInit {
 
   submit () {
     console.log ('submit');
+
+    /*
+  allowedResults: string;
+  rounds: string; */
+
+    // collect all multiple selections
+    
+    // fix discipline if needed (when there are no options)
+    
+    if (this.disciplinesOptions == undefined || this.disciplinesOptions.length == 0) 
+      this.discipline = this.sport;
+
+    if (this.category == undefined || this.category == ''
+        || this.gender == undefined || this.gender == ''
+        || this.startDate == undefined || this.startDate == ''
+        || this.endDate == undefined || this.endDate == ''
+        || this.sport == undefined || this.sport == ''
+        || this.format == undefined || this.format == ''
+        || this.phases == undefined || this.phases == ''
+        || this.discipline == undefined || this.discipline == '')
+
+        this.errorsFound = 'Required fields are missing';
+
+    else {
+
+      // collect all multiple selections
+      this.errorsFound = '';
+
+      this.locations = [];
+
+      this.locationOptions.forEach ((l) => {
+
+        if (l.selected)
+          this.locations.push (l.name);
+
+      });
+
+      this.delegates = [];
+
+      this.availableDelegates.forEach ((ad) => {
+
+        if (ad.selected)
+          this.delegates.push (ad.username);
+
+      });
+
+      this.participants = [];
+      this.teams = [];
+
+      if (this.category == 'I') {
+
+        this.participantsOptions.forEach ((p) => {
+
+          if (p.selected)
+            this.participants.push (p.lastname + ', ' + p.firstname);
+
+        });
+
+      }
+
+      else if (this.category == 'T') {
+
+        this.teamsOptions.forEach ((t) => {
+
+          if (t.selected)
+            this.teams.push (t.country);
+
+        });
+
+      }
+
+      if (this.locations.length == 0
+          || this.delegates.length == 0
+          || (this.category == 'I' && this.participants.length == 0)
+          || (this.category == 'T' && this.teams.length == 0))
+
+        this.errorsFound = 'Required fields are missing';
+
+      else {
+
+        this.errorsFound = '';
+
+        // format checks
+
+        console.log ('All requireds are filled; check formats');
+      }
+      
+
+    }
+  
   }
 
 }
