@@ -30,6 +30,8 @@ import { SportsComponent } from './components/organizer/sports/sports.component'
 import { CompetitionsComponent } from './components/organizer/competitions/competitions.component';
 import { RequestsComponent } from './components/organizer/requests/requests.component';
 import { RecordsComponent } from './components/organizer/records/records.component';
+import { FormatComponent } from './components/organizer/format/format.component';
+import { CompetitionParticipantsComponent } from './components/organizer/competition-participants/competition-participants.component';
 
 
 @NgModule({
@@ -58,7 +60,9 @@ import { RecordsComponent } from './components/organizer/records/records.compone
     SportsComponent,
     CompetitionsComponent,
     RequestsComponent,
-    RecordsComponent
+    RecordsComponent,
+    FormatComponent,
+    CompetitionParticipantsComponent
   ],
   imports: [
     BrowserModule,

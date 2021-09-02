@@ -42,6 +42,11 @@ let user = new Schema ({
     // whether user account is approved by organizer
     approved: {
         type: Boolean
+    },
+
+    // numOfCompetitions (for delegates)
+    numOfCompetitions: {
+        type: Number
     }
 
 })

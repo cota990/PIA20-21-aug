@@ -36,7 +36,7 @@ let participant = new Schema({
 
     // sport disciplines of participant
     disciplines: {
-        type: Array
+        type: Array(String)
     }
 
 });

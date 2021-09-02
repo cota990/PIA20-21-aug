@@ -25,11 +25,59 @@ export class RequestsComponent implements OnInit {
   requests: User [];
 
   accept (username: string) {
-    console.log ('accept (' + username + ')');
+    
+    this.userService.approveRequest(username).subscribe((res) => {
+
+      alert (res['message']);
+
+      if (res['message'] == 'Account approved') {
+
+        //remove from list
+        let i: number = -1;
+        this.requests.forEach( (user, index) => {
+
+          if (user.username == username)
+            i = index;
+
+        })
+
+        let tempObj = new User ();
+        this.requests.splice(i, 1);
+        this.requests.splice(i, 0, tempObj);
+        this.requests.splice(i, 1);
+
+      }
+
+    })
+
   }
 
   reject (username: string) {
-    console.log ('reject (' + username + ')');
+    
+    this.userService.rejectRequest(username).subscribe((res) => {
+
+      alert (res['message']);
+
+      if (res['message'] == 'Account rejected') {
+
+        //remove from list
+        let i: number = -1;
+        this.requests.forEach( (user, index) => {
+
+          if (user.username == username)
+            i = index;
+
+        })
+
+        let tempObj = new User ();
+        this.requests.splice(i, 1);
+        this.requests.splice(i, 0, tempObj);
+        this.requests.splice(i, 1);
+
+      }
+
+    })
+    
   }
 
 }

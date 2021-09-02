@@ -6,4 +6,6 @@ export class User {
     type: string;
     country: string;
     approved: boolean;
+    selected: boolean;
+    fullname: string;
 }

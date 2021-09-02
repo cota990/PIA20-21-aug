@@ -11,4 +11,8 @@ participantRouter.route('/submitParticipant').post(
     (req, res) => new ParticipantControler().submitParticipant(req, res)
 );
 
+participantRouter.route('/getAllParticipantsForIndividualDiscipline').post(
+    (req, res) => new ParticipantControler().getAllParticipantsForIndividualDiscipline(req, res)
+);
+
 export default participantRouter;

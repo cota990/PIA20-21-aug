@@ -1,0 +1,159 @@
+.competitions-container {
+    height: 760px;
+    max-height: 760px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+}
+
+.competitions-row {
+    width: 100%;
+    height: 700px;
+    display: flex;
+    align-items: center;
+}
+
+.status-report {
+    height: 30px;
+    width: 100%;
+    text-align: center;
+    color: red;
+}
+
+.competitions-page-panel {
+    background-color: lightgrey;
+
+    border-top: 15px inset;
+    border-left: 15px inset;
+    border-right: 15px inset;
+    border-bottom: 15px inset;
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 5px;
+    padding-right: 5px;
+
+    height: 600px;
+}
+
+.competitions-panel {
+    height: 500px;
+    display: flex;
+    justify-content: center;
+}
+
+.radio-button-container {
+
+    width: 95%;
+    height: 30px;
+}
+
+.radio-span {
+    width: 40%;
+    height: 25px;
+    display: flex;
+    float: left;
+    justify-content: center;
+    margin-right: 15px;
+    /*padding-left: 25px;*/
+}
+
+.select-container {
+
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.select-span {
+
+    width: 40%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+
+}
+
+.select-field {
+
+    width: 50%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.description-span {
+    width: 100%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.input-field-container {
+    width: 90%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.input-field {
+    width: 70%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.input-field-date-left {
+    width: 30%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.input-field-date-right {
+    width: 30%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    margin-left: 15px;
+}
+
+.checkbox-container {
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.checkbox-span {
+
+    width: 100%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    margin-right: 40px;
+
+}
+
+.button-container {
+
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.submit-button {
+    width: 20%;
+    margin-left: 20px;
+    margin-right: 20px;
+}

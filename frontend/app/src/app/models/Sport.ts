@@ -15,4 +15,10 @@ export class Sport {
     // minimum of allowed players for team sports
     minPlayers: number;
 
+    // format of score
+    scoreFormat: string;
+
+    // list of allowed results
+    allowedResults: Array<string>;
+
 }

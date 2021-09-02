@@ -23,4 +23,8 @@ userRouter.route('/rejectRequest').post(
     (req, res) => new UserControler().rejectRequest(req, res)
 );
 
+userRouter.route('/getAvailableDelegates').get(
+    (req, res) => new UserControler().getAvailableDelegates(req, res)
+);
+
 export default userRouter;

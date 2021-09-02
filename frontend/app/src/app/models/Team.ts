@@ -4,4 +4,6 @@ export class Team {
     sport: string;
     discipline: string;
     numOfPlayers: string;
+
+    selected:boolean;
 }

@@ -7,4 +7,8 @@ teamRouter.route('/submitTeam').post(
     (req, res) => new TeamControler().submitTeam(req, res)
 );
 
+teamRouter.route('/getAllTeamsForTeamDiscipline').post(
+    (req, res) => new TeamControler().getAllTeamsForTeamDiscipline(req, res)
+);
+
 export default teamRouter;

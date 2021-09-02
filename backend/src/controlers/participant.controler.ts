@@ -324,4 +324,20 @@ export class ParticipantControler {
         })
     }
 
+    getAllParticipantsForIndividualDiscipline = (req: express.Request, res: express.Response) => {
+
+        let gender = req.body.gender;
+        let sport = req.body.sport;
+        let discipline = req.body.discipline;
+
+        Participant.find({'gender': gender, 'sport': sport, 'disciplines': {$in: discipline}}, (err, participants) => {
+
+            if (err) console.log (err);
+            else
+                res.json(participants);
+
+        });
+        
+    }
+
 }

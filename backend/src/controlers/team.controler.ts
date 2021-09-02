@@ -74,4 +74,20 @@ export class TeamControler {
         
     }
 
+    getAllTeamsForTeamDiscipline = (req: express.Request, res: express.Response) => {
+
+        let gender = req.body.gender;
+        let sport = req.body.sport;
+        let discipline = req.body.discipline;
+
+        Team.find({'sport': sport, 'gender': gender, 'discipline': discipline}, (err, teams) => {
+
+            if (err) console.log (err);
+            else
+                res.json (teams);
+
+        });
+
+    }
+
 }

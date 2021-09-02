@@ -32,5 +32,19 @@ export class ParticipantService {
     }
 
     return this.http.post(`${this.uri}/submitParticipant`, data);
+  
   }
+
+  getAllParticipantsForIndividualDiscipline (sport:string, discipline: string, gender: string) {
+
+    const data = {
+      sport: sport,
+      discipline: discipline,
+      gender: gender
+    }
+
+    return this.http.post(`${this.uri}/getAllParticipantsForIndividualDiscipline`, data);
+  
+  }
+  
 }

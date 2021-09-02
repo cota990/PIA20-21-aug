@@ -32,7 +32,20 @@ let sport = new Schema ({
     // added to current olympics by organizer
     currentInOlympics: {
         type: Boolean
+    },
+
+    // format of competition metadata
+
+    // format of scores input: match (poeni_tim1 : poeni_tim2), short race (ss:tt), medium race (mm:ss:tt), long race (hh:mm:ss), jump/throw (m,cm), num (number)
+    scoreFormat: {
+        type: String
+    },
+
+    // list of allowed values for results
+    allowedResults: {
+        type: Array(String)
     }
+
 });
 
 export default mongoose.model ('Sport', sport, 'sports');

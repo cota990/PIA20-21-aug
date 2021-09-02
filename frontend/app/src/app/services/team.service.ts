@@ -20,5 +20,19 @@ export class TeamService {
     }
 
     return this.http.post(`${this.uri}/submitTeam`, data);
+
   }
+
+  getAllTeamsForTeamDiscipline (sport: string, discipline: string, gender: string) {
+
+    const data = {
+      gender: gender,
+      sport: sport,
+      discipline: discipline
+    }
+
+    return this.http.post(`${this.uri}/getAllTeamsForTeamDiscipline`, data);
+
+  }
+
 }

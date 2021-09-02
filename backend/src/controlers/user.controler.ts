@@ -146,7 +146,8 @@ export class UserControler {
                         country: country,
                         mail: mail,
                         type: type,
-                        approved: false
+                        approved: false,
+                        numOfCompetitions: 0
                     });
 
                     user.save().then((user) => {
@@ -191,6 +192,7 @@ export class UserControler {
                     return res.status(200).json({'message': 'Something went wrong. Please try again later'});
 
             }
+        
         });
 
     }
@@ -210,7 +212,21 @@ export class UserControler {
                     return res.status(200).json({'message': 'Something went wrong. Please try again later'});
 
             }
+        
         });
 
     }
+
+    getAvailableDelegates = (req: express.Request, res: express.Response) => {
+
+        User.find({'type': 'D', 'numOfCompetitions': {$lt: 3}}, (err, users) => {
+
+            if (err) console.log (err);
+            else
+                res.json (users);
+
+        });
+
+    }
+
 }

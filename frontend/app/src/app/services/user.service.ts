@@ -64,4 +64,10 @@ export class UserService {
 
   }
 
+  getAvailableDelegates () {
+
+    return this.http.get(`${this.uri}/getAvailableDelegates`);
+
+  }
+
 }

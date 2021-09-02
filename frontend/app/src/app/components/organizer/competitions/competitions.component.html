@@ -1,1 +1,216 @@
-<p>competitions works!</p>
+<div class='container-fluid competitions-container'>
+
+    <div class='row competitions-row'>
+
+        <h3>Start new competition</h3>
+        
+        <div *ngIf = 'errorsFound != ""' class = 'col-sm-12 status-report'>
+            
+            {{errorsFound}}
+        
+        </div>
+
+        <div class = 'col-sm-12 col-md-6 competitions-page-panel'>
+
+            <div class = 'container-fluid'>
+
+                <div class = 'competitions-panel row'>
+
+                    <div class = 'col-sm-12 radio-button-container'>
+                        
+                        <span class = 'radio-span'>Select category: </span>
+                        <input type='radio' value = 'I' name = 'category' [(ngModel)]='category' required (change) = 'radioChanged()'> Individual
+                        <input type='radio' value = 'T' name = 'category' [(ngModel)]='category' required (change) = 'radioChanged()'> Team
+
+                    </div>
+
+                    <div class = 'col-sm-12 radio-button-container'>
+
+                        <span class = 'radio-span'>Select gender: </span>
+                        <input type='radio' value = 'M' name = 'gender' [(ngModel)]='gender' (change) = 'genderChanged()'> Male 
+                        <input type='radio' value = 'F' name = 'gender' [(ngModel)]='gender' (change) = 'genderChanged()'> Female 
+
+                    </div>
+
+                    <div class = 'col-sm-12 input-field-container'>
+
+                        <span class = 'select-span'>Start & end date: </span>
+                        <input type='text' name = 'startDate' placeholder='yyyy-mm-dd' [(ngModel)]='startDate' class = 'input-field-date-left'>
+                        <input type='text' name = 'endDate' placeholder='yyyy-mm-dd' [(ngModel)]='endDate' class = 'input-field-date-right'>
+
+                    </div>
+
+                    <div class = 'col-sm-12 select-container' *ngIf = 'category == "I"'>
+                        
+                        <span class = 'select-span'>Select sport: </span>
+                        <select name = 'sport' [(ngModel)] = 'sport' class = 'select-field' (change) = 'setLocationsAndDisciplines()'>
+                            <option *ngFor = 'let sd of individualSportsDisciplines' label={{sd.sport}} value={{sd.sport}}></option>
+                        </select>
+
+                    </div>
+
+                    <div class = 'col-sm-12 select-container' *ngIf = 'category == "T"'>
+                        
+                        <span class = 'select-span'>Select sport: </span>
+                        <select name = 'sport' [(ngModel)] = 'sport' class = 'select-field' (change) = 'setLocationsAndDisciplines()'>
+                            <option *ngFor = 'let sd of teamSportsDisciplines' label={{sd.sport}} value={{sd.sport}}></option>
+                        </select>
+
+                    </div>
+
+                    <div *ngIf = 'disciplinesOptions != undefined && disciplinesOptions.length > 0'
+                         class = 'col-sm-12 select-container'>
+
+                        <span class = 'select-span'>Select discipline: </span>
+                        
+                        <select name = 'discipline' [(ngModel)] = 'discipline' class = 'select-field' (change) = 'disciplineChanged()'>
+                            
+                            <option *ngFor = 'let d of disciplinesOptions' label={{d.discipline}} value={{d.discipline}}></option>
+                    
+                        </select>
+                        
+                    </div>
+
+                    <div class = 'col-sm-12 checkbox-container container-fluid'>
+
+                         <div class = 'row' style='width:100%;'>
+
+                            <div class = 'col-sm-12'>
+
+                                <span class = 'checkbox-span'>Location(s): </span>
+
+                            </div>
+                            
+                            <div *ngFor = 'let l of locationOptions' class = 'col-sm-6'>
+                                <input type="checkbox" [(ngModel)] = 'l.selected'> {{l.name}}
+                            </div>
+
+                         </div>
+                        
+                    </div>
+
+                    <div class = 'col-sm-12 select-container'>
+                        
+                        <span class = 'select-span'>Select score format: </span>
+                        <select name = 'format' [(ngModel)] = 'format' class = 'select-field' (change) = 'setDescription()'>
+                            <option *ngFor = 'let f of formatOptions' label={{f.label}} value={{f.type}}></option>
+                        </select>
+
+                    </div>
+
+                    <!-- 
+                    <div class = 'col-sm-12 span-container' *ngIf = 'format != undefined && format != ""'>
+
+                        <span class = 'description-span'>{{formatDescription}}</span>
+
+                    </div>
+                    -->
+
+                    <div class = 'col-sm-12 input-field-container'>
+
+                        <span class = 'select-span'>Allowed results: </span>
+                        <input type='text' name = 'allowedResults' placeholder='Enter allowed results separated by commas...' [(ngModel)]='allowedResults' class = 'input-field'>
+
+                    </div>
+
+                    <div class = 'col-sm-12 radio-button-container'>
+                        
+                        <span class = 'radio-span'>Competition phases: </span>
+                        <input type='radio' value = 'F' name = 'phases' [(ngModel)]='phases' required> Finals
+                        <input type='radio' value = 'K' name = 'phases' [(ngModel)]='phases' required> Knockout stage
+                        <input type='radio' value = 'G' name = 'phases' [(ngModel)]='phases' required> Group stage
+
+                    </div>
+
+                    <div class = 'col-sm-12 input-field-container' *ngIf = 'phases == "F"'>
+
+                        <span class = 'select-span'>Attempts in finals: </span>
+                        <input type='number' name = 'rounds' placeholder='Number of rounds in finals (default 1)' [(ngModel)]='rounds' class = 'input-field'>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class='col-sm-12 col-md-1'></div>
+
+        <div class = 'col-sm-12 col-md-5 competitions-page-panel'>
+
+            <div class = 'container-fluid' style='width:100%;'>
+
+                <div class = 'competitions-panel row'>
+
+                    <div class = 'col-sm-12 checkbox-container container-fluid'>
+
+                        <div class = 'row' style='width:100%; height: 200px; overflow: auto'>
+        
+                           <div class = 'col-sm-12'>
+        
+                               <span class = 'checkbox-span'>Available delegates: </span>
+        
+                           </div>
+                           
+                           <div *ngFor = 'let d of availableDelegates' class = 'col-sm-12'>
+                               <input type="checkbox" [(ngModel)] = 'd.selected'> <img [src]="'/assets/' + d.country.toLowerCase() + '.jpg'" style="width: 40px; margin-left: 10px;"> {{d.fullname}} 
+                           </div>
+        
+                        </div>
+                       
+                   </div>
+
+                   <div class = 'col-sm-12 checkbox-container container-fluid' *ngIf = 'category == "I"'>
+
+                        <div class = 'row' style='width:100%; height: 400px; overflow: auto'>
+            
+                        <div class = 'col-sm-12'>
+            
+                            <span class = 'checkbox-span' *ngIf = 'displayParticipants'>Select participants: </span>
+                            <span class = 'checkbox-span' *ngIf = '!displayParticipants'>Select sport(and discipline) and gender to see available participants: </span>
+            
+                        </div>
+                        
+                        <div *ngFor = 'let p of participantsOptions' class = 'col-sm-12'>
+                            <input type="checkbox" [(ngModel)] = 'p.selected'> <img [src]="'/assets/' + p.country.toLowerCase() + '.jpg'" style="width: 40px; margin-left: 10px;"> {{p.fullname}} 
+                        </div>
+            
+                        </div>
+
+                   </div>
+                   
+                   <div class = 'col-sm-12 checkbox-container container-fluid' *ngIf = 'category == "T"'>
+                       
+                        <div class = 'row' style='width:100%; height: 400px; overflow: auto'>
+        
+                            <div class = 'col-sm-12'>
+                
+                                <span class = 'checkbox-span' *ngIf = 'displayTeams'>Select teams: </span>
+                                <span class = 'checkbox-span' *ngIf = '!displayTeams'>Select sport(and discipline) and gender to see available teams: </span>
+                
+                            </div>
+                       
+                            <div *ngFor = 'let t of teamsOptions' class = 'col-sm-12'>
+                                <input type="checkbox" [(ngModel)] = 't.selected'> <img [src]="'/assets/' + t.country.toLowerCase() + '.jpg'" style="width: 40px; margin-left: 10px;"> {{t.country}} 
+                            </div>
+        
+                        </div>
+               
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class = 'col-sm-12 button-container'>
+                        
+            <button (click)='submit()' class = 'submit-button'>Start competition</button>
+
+        </div>
+
+    </div>
+
+</div>
