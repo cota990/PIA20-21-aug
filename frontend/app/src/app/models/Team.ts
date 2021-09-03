@@ -5,5 +5,6 @@ export class Team {
     discipline: string;
     numOfPlayers: string;
 
-    selected:boolean;
+    selected: boolean;
+    countryName: string;
 }

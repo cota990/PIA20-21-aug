@@ -1,1 +1,130 @@
-<p>participants works!</p>
+<div class='container-fluid participants-container'>
+
+    <div class='row participants-row'>
+
+        <div class = 'col-sm-12 col-md-4 participants-page-panel'>
+
+            <div class = 'container-fluid'>
+
+                <div class = 'participants-panel row'>
+
+                    <div class = 'col-sm-12 input-field-container'>
+
+                        <span class = 'select-span'>Name: </span>
+                        <input type='text' name = 'name' [(ngModel)]='name' class = 'input-field'>
+        
+                    </div>
+
+                    <div class = 'col-sm-12 select-container'>
+                        
+                        <span class = 'select-span'>Country: </span>
+                        <select name = 'country' [(ngModel)] = 'country' class = 'select-field'>
+                            <option *ngFor = 'let c of countries' label={{c.name}} value={{c.abbr}}></option>
+                        </select>
+
+                    </div>
+
+                    <div class = 'col-sm-12 select-container'>
+                        
+                        <span class = 'select-span'>Sport: </span>
+                        <select name = 'sport' [(ngModel)] = 'sport' class = 'select-field' (change) = 'setDisciplines()'>
+                            <option *ngFor = 'let s of sports' label={{s}} value={{s}}></option>
+                        </select>
+
+                    </div>
+
+                    <div *ngIf = 'disciplines != undefined && disciplines.length > 0'
+                        class = 'col-sm-12 select-container'>
+
+                       <span class = 'select-span'>Select discipline: </span>
+                       
+                       <select name = 'discipline' [(ngModel)] = 'discipline' class = 'select-field'>
+                           
+                           <option *ngFor = 'let d of disciplines' label={{d}} value={{d}}></option>
+                   
+                       </select>
+                       
+                   </div>
+
+                   <div class = 'col-sm-12 radio-button-container'>
+
+                        <span class = 'radio-span'>Select gender: </span>
+                        <input type='radio' value = 'M' name = 'gender' [(ngModel)]='gender'> Male 
+                        <input type='radio' value = 'F' name = 'gender' [(ngModel)]='gender'> Female 
+
+                    </div>
+
+                    <div class = 'col-sm-12 checkbox-container'>
+                        
+                        <input type="checkbox" [(ngModel)] = 'medalWinnersOnly' class = 'checkbox'> <span class='checkbox-span'>Medal winners</span>
+                       
+                   </div>
+
+                   <div class = 'col-sm-12 button-container'>
+                        
+                    <button (click)='search()' class = 'submit-button'>Search</button>
+        
+                </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class = 'col-sm-12 col-md-8 table-container'>
+
+            <table>
+
+                <tr>
+                    
+                    <th>Name</th>
+                    <th>Country</th>
+                    <th>Gender</th>
+                    <th>Sport</th>
+                    <th>Disciplines</th>
+
+                </tr>
+
+                <tr *ngFor = 'let p of participantsForDisplay'>
+
+                    <td>{{p.fullname}}</td>
+                    <td class = 'country-name-with-flag'>{{p.country}}</td>
+                    <td>{{p.gender}}</td>
+                    <td>{{p.sport}}</td>
+                    <td>{{p.disciplines}}</td>
+
+                </tr>
+            
+            </table>
+
+            <div *ngIf = 'participantsForDisplay.length != 0' class = 'pagination'>
+                
+                <span class = 'pagination-previous' 
+                      [ngClass] = 'currentPageParticipants != 1 ? "pagination-span" : "pagination-span-disabled"'
+                      (click) = 'goToPreviousPageParticipants()'>&lt;Previous</span>
+                
+                <span class = 'pagination-next' 
+                      [ngClass] = 'currentPageParticipants != numOfPagesParticipants ? "pagination-span" : "pagination-span-disabled"'
+                      (click) = 'goToNextPageParticipants()'>Next&gt;</span>
+
+                <div class = 'pagination-go-to-page'>
+                    Go to page:
+                    <input type="number" [(ngModel)] = 'inputPageParticipants' class = 'pagination-input' min = '1' max = '{{numOfPagesParticipants}}'>
+                    <button (click) = 'goToPageParticipants()' class = 'pagination-button'>GO</button>
+                </div>
+                <div class = 'pagination-go-to-page'>
+                    Results per page:
+                    <input type='radio' value = '3' name = 'participantsPerPage' [(ngModel)]='participantsPerPageString' (change) = 'changeParticipantsPerPage()'> 3 
+                    <input type='radio' value = '20' name = 'participantsPerPage' [(ngModel)]='participantsPerPageString' (change) = 'changeParticipantsPerPage()'> 20
+                    <input type='radio' value = '50' name = 'participantsPerPage' [(ngModel)]='participantsPerPageString' (change) = 'changeParticipantsPerPage()'> 50 
+                    <input type='radio' value = '100' name = 'participantsPerPage' [(ngModel)]='participantsPerPageString' (change) = 'changeParticipantsPerPage()'> 100  
+                </div>
+                
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -6,6 +6,7 @@ import { ScoreFormat } from 'src/app/models/ScoreFormat';
 import { Sport } from 'src/app/models/Sport';
 import { Team } from 'src/app/models/Team';
 import { User } from 'src/app/models/User';
+import { CompetitionService } from 'src/app/services/competition.service';
 import { CountryService } from 'src/app/services/country.service';
 import { LocationService } from 'src/app/services/location.service';
 import { ParticipantService } from 'src/app/services/participant.service';
@@ -29,7 +30,8 @@ export class CompetitionsComponent implements OnInit {
               private userService: UserService,
               private participantsService: ParticipantService,
               private teamService: TeamService,
-              private countryService: CountryService) { }
+              private countryService: CountryService,
+              private competitionsService:CompetitionService) { }
 
   ngOnInit(): void {
 
@@ -45,6 +47,8 @@ export class CompetitionsComponent implements OnInit {
 
     this.displayParticipants = false;
     this.displayTeams = false;
+
+    this.allowedResults = '';
 
     this.sportsService.getAllSportsInOlympics().subscribe((sports: Sport[]) => {
 
@@ -175,7 +179,7 @@ export class CompetitionsComponent implements OnInit {
   format: string;
   allowedResults: string;
   phases: string;
-  rounds: string;
+  rounds: number;
   startDate: string;
   endDate: string;
   locations: string[];
@@ -476,6 +480,171 @@ export class CompetitionsComponent implements OnInit {
 
   }
 
+  checkScoreFormat (score: string, format: string) {
+
+    console.log (score);console.log (format);
+
+    if (format == 'match') {
+
+      let scores = score.split(':');
+
+      if (scores.length == 2) {
+
+        let score1 = parseInt(scores[0]);
+        let score2 = parseInt(scores[1]);
+
+        if (isNaN (score1) || isNaN (score2))
+          return false;
+
+        else return true;
+
+      }
+      
+      else return false;
+
+    }
+
+    else if (format == 'short-race') {
+
+      let times = score.split(':');
+
+      if (times.length == 2) {
+
+        let seconds = parseInt(times[0]);
+        let hundreths = parseInt(times[1]);
+
+        if (isNaN (seconds) || isNaN (hundreths))
+          return false;
+
+        else if (seconds >= 60 || hundreths >= 100)
+          return false;
+
+        else return true;
+
+      }
+      
+      else return false;
+
+    }
+
+    else if (format == 'medium-race') {
+
+      let times = score.split(':');
+
+      if (times.length == 3) {
+
+        let minutes = parseInt(times[0]);
+        let seconds = parseInt(times[1]);
+        let hundreths = parseInt(times[2]);
+
+        if (isNaN (minutes) || isNaN (seconds) || isNaN (hundreths))
+          return false;
+
+        else if (minutes >= 60 || seconds >= 60 || hundreths >= 100)
+          return false;
+
+        else return true;
+
+      }
+      
+      else return false;
+
+    }
+
+    else if (format == 'long-race') {
+
+      let times = score.split(':');
+
+      if (times.length == 3) {
+
+        let hours = parseInt(times[0]);
+        let minutes = parseInt(times[1]);
+        let seconds = parseInt(times[2]);
+
+        if (isNaN (hours) || isNaN (minutes) || isNaN (seconds))
+          return false;
+
+        else if (hours >= 24 || minutes >= 60 || seconds >= 60)
+          return false;
+
+        else return true;
+
+      }
+      
+      else return false;
+
+    }
+
+    else if (format == 'distance') {
+
+      let distances = score.split(',');
+
+      if (distances.length == 2) {
+
+        let meters = parseInt(distances[0]);
+        let centimeters = parseInt(distances[1]);
+
+        if (isNaN (meters) || isNaN (centimeters))
+          return false;
+
+        else if (centimeters >= 100)
+          return false;
+
+        else return true;
+
+      }
+      
+      else return false;
+
+    }
+
+    else if (format == 'points') {
+
+      let points = parseInt(score);
+
+      if (isNaN (points))
+        return false;
+
+      else if (points < 0)
+        return false;
+
+      else return true;
+
+    }
+
+  }
+
+  checkDateFormat (dateString: string)  {
+
+    if (dateString.length != 10)
+      return false;
+
+    else
+
+      for (let i = 0; i < dateString.length; i++) {
+
+        if (i == 4 || i == 7) {
+
+          if (dateString[i] != '-') {
+            
+            return false;
+
+          }
+        }
+
+        else 
+          if (isNaN(parseInt(dateString[i]))) {
+
+            return false;
+
+          }
+
+      }
+
+    return true;
+
+  }
+
   submit () {
     console.log ('submit');
 
@@ -559,10 +728,202 @@ export class CompetitionsComponent implements OnInit {
       else {
 
         this.errorsFound = '';
+        let errorFound = false;
 
         // format checks
 
         console.log ('All requireds are filled; check formats');
+
+        let startDateFormat: boolean = this.checkDateFormat (this.startDate);
+        let endDateFormat: boolean = this.checkDateFormat (this.endDate);
+
+        if (!startDateFormat || !endDateFormat) {
+
+          errorFound = true;
+
+          if (!startDateFormat && !endDateFormat)
+            this.errorsFound += 'Dates in wrong format. ';
+
+          else if (!startDateFormat)
+            this.errorsFound += 'Start date in wrong format. ';
+
+          else if (!endDateFormat)
+            this.errorsFound += 'End date in wrong format. ';
+
+        }
+
+        else {
+
+          let start = new Date(this.startDate), end = new Date(this.endDate);
+
+          if (!isNaN(start.getMilliseconds()) && !isNaN(end.getMilliseconds())) {
+
+            if (end < start) {
+
+              errorFound = true;
+              this.errorsFound += "End date can't be after start date. ";
+  
+            }
+  
+
+          }
+
+          else {
+
+            errorFound = true;
+
+            if (isNaN(start.getMilliseconds()) && isNaN(end.getMilliseconds()))
+              this.errorsFound += 'Dates in wrong format. ';
+
+            else if (isNaN(start.getMilliseconds()))
+              this.errorsFound += 'Start date in wrong format. ';
+  
+            else if (isNaN(end.getMilliseconds()))
+              this.errorsFound += 'End date in wrong format. ';
+
+          }
+
+        }
+
+        let allowedResultsFormat: boolean = true;
+
+        if (this.allowedResults != undefined && this.allowedResults != '') {
+
+          let allowedResultsArray = this.allowedResults.split(';');
+          console.log (allowedResultsArray);
+
+          allowedResultsArray.forEach ((result) => {
+
+            if (!this.checkScoreFormat(result, this.format))
+              allowedResultsFormat = false;
+
+          });
+
+        }
+
+        if (!allowedResultsFormat) {
+
+          errorFound = true;
+          this.errorsFound += 'Allowed results submitted are in wrong format. ';
+
+        }
+
+        let roundsFormat: boolean = true;
+
+        console.log (this.rounds);
+
+        if (this.rounds == undefined && this.phases == 'F') 
+          this.rounds = 1;
+
+        else if (this.phases == 'F' && this.rounds < 1){
+
+          errorFound = true;
+          this.errorsFound += 'Number of rounds(attempts) in final round must be greater than 0. ';
+
+        }
+
+        if (!errorFound) {
+
+          // number of players/teams check
+
+          if (this.category == 'I' && this.phases == 'G') {
+
+            errorFound = true;
+            this.errorsFound = 'Group stage is not allowed for individual competitions';
+          
+          }
+
+          else if (this.category == 'I' && this.phases == 'K') {
+
+            if ([4,8,16].indexOf(this.participants.length) == -1) {
+
+              errorFound = true;
+              this.errorsFound = 'Number of participants for individual competitions in knockout stage format is 4, 8 or 16';
+
+            }
+
+          }
+
+          else if (this.category == 'I' && this.phases == 'F') {
+
+            if (this.participants.length < 3 || this.participants.length > 8) {
+
+              errorFound = true;
+              this.errorsFound = 'Number of participants for individual competitions in final stage format is between 3 and 8';
+
+            }
+            
+          }
+
+          else if (this.category == 'T' && this.phases == 'G') {
+
+            if (this.teams.length != 12) {
+
+              errorFound = true;
+              this.errorsFound = 'Number of teams for team competitions in group stage format is 12';
+
+            }
+            
+          }
+
+          else if (this.category == 'I' && this.phases == 'K') {
+
+            if ([4,8,16].indexOf(this.teams.length) == -1) {
+
+              errorFound = true;
+              this.errorsFound = 'Number of teams for team competitions in knockout stage format is 4, 8 or 16';
+
+            }
+
+          }
+
+          else if (this.category == 'T' && this.phases == 'F') {
+
+            if (this.teams.length < 3 || this.teams.length > 8) {
+
+              errorFound = true;
+              this.errorsFound = 'Number of teams for team competitions in final stage format is between 3 and 8';
+
+            }
+
+          }
+
+          if (!errorFound)
+
+          // submit to service
+          this.competitionsService.startCompetitionByOrganizer(this.sport, this.discipline, this.category,this.gender, this.format, this.allowedResults.split(';'),
+                                  this.phases, this.rounds, this.startDate, this.endDate, this.locations, this.delegates, this.participants, this.teams).subscribe((res) => {
+
+            alert(res['message']);
+
+            if (res['message'] == 'Competition successfully started') {
+                
+              this.radioChanged();
+              this.teamsOptions = [];
+              this.participantsOptions = [];
+              this.userService.getAvailableDelegates().subscribe( (delegates: User[]) => {
+
+                delegates.forEach( (delegate) => {
+          
+                  let delegateOption = new User();
+                  delegateOption.fullname = delegate.lastname + ', ' + delegate.firstname;
+                  delegateOption.username = delegate.username;
+                  delegateOption.country = delegate.country;
+                  delegateOption.selected = false;
+                  
+                  this.availableDelegates.push (delegateOption);
+          
+                })
+          
+              });
+
+            }
+
+          });
+
+        }
+         
+      
       }
       
 

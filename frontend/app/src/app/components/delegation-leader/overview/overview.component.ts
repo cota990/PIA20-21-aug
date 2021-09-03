@@ -22,6 +22,7 @@ export class OverviewComponent implements OnInit {
 
     this.countryService.getCountryByAbbr(signedInUser.country).subscribe( (country: Country) => {
       this.country = country;
+      this.countryName = country.name;
     })
 
     this.sportsService.getAllSportsInOlympics().subscribe((sports: Sport[]) => {
@@ -66,6 +67,7 @@ export class OverviewComponent implements OnInit {
   
   numOfParticipants: number = 0;
   country: Country;
+  countryName: string = '';
 
   participantsSports: ParticipantPerSport[] = [];
 

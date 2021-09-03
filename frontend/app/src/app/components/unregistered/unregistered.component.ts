@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Country } from 'src/app/models/Country';
 import { CountryService } from 'src/app/services/country.service';
+import { HeaderComponent } from '../header/header.component';
 import { MenuComponent } from '../menu/menu.component';
 
 @Component({
@@ -18,6 +19,8 @@ export class UnregisteredComponent implements OnInit {
     //this.router.navigate([{outlets: {menuRouterOutlet: 'menuUnregistered'}}]);
 
     MenuComponent.menuSelector = 'unregistered';
+    HeaderComponent.unregisteredPage = true;
+    HeaderComponent.displayUserPanel = true;
 
     this.nameSortDirection = '';
     this.numOfParticipantsSortDirection = '';

@@ -21,5 +21,7 @@ export class Participant {
     // sport disciplines of participant
     disciplines: Array<string>;
 
+    medals: number;
+
     selected: boolean;
 }

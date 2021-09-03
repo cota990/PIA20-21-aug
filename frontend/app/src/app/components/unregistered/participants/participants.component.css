@@ -1,0 +1,221 @@
+.participants-container {
+    height: 760px;
+    max-height: 760px;
+    min-height: 300px;
+    display: flex;
+    align-items: top;
+    padding-top: 20px;
+}
+
+.participants-row {
+    width: 100%;
+    height: 760px;
+    display: flex;
+    align-items: center;
+}
+
+.participants-page-panel {
+    background-color: lightgrey;
+
+    border-top: 15px inset;
+    border-left: 15px inset;
+    border-right: 15px inset;
+    border-bottom: 15px inset;
+
+    display: flex;
+    align-items: center;
+
+    height: 350px;
+}
+
+.participants-panel {
+    height: 300px;
+    display: flex;
+    justify-content: center;
+}
+
+.table-container {
+    height: 700px;
+    overflow: auto;
+}
+
+.input-field-container {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.input-field {
+    width: 55%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    margin-left: 4%;
+}
+
+.select-container {
+
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.select-span {
+
+    width: 40%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+
+}
+
+.select-field {
+
+    width: 50%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.radio-button-container {
+
+    width: 95%;
+    height: 30px;
+}
+
+.radio-span {
+    width: 40%;
+    height: 25px;
+    display: flex;
+    float: left;
+    justify-content: center;
+    margin-right: 35px;
+    /*padding-left: 25px;*/
+}
+
+.checkbox-container {
+
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.checkbox-span {
+
+    width: 30%;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    margin-right: 40px;
+
+}
+
+.checkbox {
+
+    margin-top: 5px;
+
+}
+
+.button-container {
+
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.submit-button {
+    width: 20%;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+
+
+table, th, td {
+    border: 1px solid red;
+    text-align: center;
+}
+
+table {
+    width: 95%
+}
+
+.country-name-with-flag {
+    text-align: left;
+}
+
+th {
+    padding: 10px;
+}
+
+td {
+    padding: 2px;
+}
+
+th {
+    background-color: red;
+    color: white;
+}
+
+tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+.pagination {
+    width: 90%;
+    display: block;
+}
+
+.pagination-previous {
+   float: left;
+}
+
+.pagination-next {
+   float: right;
+}
+
+.pagination-span {
+   height: 30px;
+   vertical-align: middle;
+   color: blue;
+   cursor: pointer;
+}
+
+.pagination-span-disabled {
+   height: 30px;
+   vertical-align: middle;
+   color: grey;
+   pointer-events: none;
+}
+
+.pagination-go-to-page {
+   display:table;
+   margin:0 auto;
+   height: 30px;
+   vertical-align: middle
+}
+
+.pagination-input {
+   width: 50px;
+   height: 25px;
+}
+
+.pagination-button {
+   width: 50px;
+   height: 27px;
+   margin-left: 15px;
+   margin-top: 2px;
+}

@@ -20,6 +20,12 @@ export class ParticipantService {
     
   }
 
+  getAllPariticpants () {
+
+    return this.http.get(`${this.uri}/getAllPariticpants`);
+    
+  }
+
   submitParticipant (firstname: string, lastname: string, gender: string, sport: string, disciplines: string[], country: string) {
 
     const data = {

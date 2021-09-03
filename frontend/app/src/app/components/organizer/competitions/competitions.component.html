@@ -163,18 +163,18 @@
 
                    <div class = 'col-sm-12 checkbox-container container-fluid' *ngIf = 'category == "I"'>
 
-                        <div class = 'row' style='width:100%; height: 400px; overflow: auto'>
+                        <div class = 'row' style='width:100%; height: 300px; overflow: auto'>
             
-                        <div class = 'col-sm-12'>
-            
-                            <span class = 'checkbox-span' *ngIf = 'displayParticipants'>Select participants: </span>
-                            <span class = 'checkbox-span' *ngIf = '!displayParticipants'>Select sport(and discipline) and gender to see available participants: </span>
-            
-                        </div>
+                            <div class = 'col-sm-12' style='height:30px;'>
+                
+                                <span class = 'checkbox-span' *ngIf = 'displayParticipants'>Select participants: </span>
+                                <span class = 'checkbox-span' *ngIf = '!displayParticipants'>Select sport(and discipline) and gender to see available participants: </span>
+                
+                            </div>
                         
-                        <div *ngFor = 'let p of participantsOptions' class = 'col-sm-12'>
-                            <input type="checkbox" [(ngModel)] = 'p.selected'> <img [src]="'/assets/' + p.country.toLowerCase() + '.jpg'" style="width: 40px; margin-left: 10px;"> {{p.fullname}} 
-                        </div>
+                            <div *ngFor = 'let p of participantsOptions' class = 'col-sm-12' style='height:30px;'>
+                                <input type="checkbox" [(ngModel)] = 'p.selected'> <img [src]="'/assets/' + p.country.toLowerCase() + '.jpg'" style="width: 40px; margin-left: 10px;"> {{p.fullname}} 
+                            </div>
             
                         </div>
 

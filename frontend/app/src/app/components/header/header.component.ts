@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   static displayUserPanel: boolean = false;
   static loggedUsername: string = '';
   static loggedType: string = '';
+  static unregisteredPage: boolean = false;
 
   getDisplayUserPanel (): boolean {
     return HeaderComponent.displayUserPanel;
@@ -32,11 +33,16 @@ export class HeaderComponent implements OnInit {
     return HeaderComponent.loggedType;
   }
 
+  getUnregisteredPage (): boolean {
+    return HeaderComponent.unregisteredPage;
+  }
+
   signOut () {
 
     HeaderComponent.displayUserPanel = false;
     HeaderComponent.loggedUsername = '';
     HeaderComponent.loggedType = '';
+    HeaderComponent.unregisteredPage = false;
 
     MenuComponent.menuSelector = '';
 
@@ -44,6 +50,19 @@ export class HeaderComponent implements OnInit {
 
     this.router.navigate(['']);
     
+  }
+
+  signIn () {
+
+    HeaderComponent.displayUserPanel = false;
+    HeaderComponent.loggedUsername = '';
+    HeaderComponent.loggedType = '';
+    HeaderComponent.unregisteredPage = false;
+
+    MenuComponent.menuSelector = '';
+
+    this.router.navigate(['']);
+
   }
  
 }

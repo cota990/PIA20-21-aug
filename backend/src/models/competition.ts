@@ -98,6 +98,17 @@ let competition = new Schema ({
         type: Array
     },
 
+    //status of competition: O - organizer started, but delegate did not set schedule, D - delegate started schedule (but not finnished), C - completed with all scores
+    status: {
+        type: String
+    },
+
+    // round: current round of competition: number for group stage round, R16, QF, SF for knockout stages, F for finals
+
+    round: {
+        type: String
+    },
+
     // Related people to competition
 
     // participants for individual sports

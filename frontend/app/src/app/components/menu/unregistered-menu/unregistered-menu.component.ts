@@ -40,7 +40,7 @@ export class UnregisteredMenuComponent implements OnInit {
       
     }
 
-    else if (route == 'leader/team') {
+    else if (route == 'unregistered/participants') {
       
       this.countriesClicked = false;
       this.medalsVisualizationClicked = false;

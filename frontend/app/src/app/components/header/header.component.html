@@ -25,12 +25,22 @@
         </div>
 
         <div *ngIf = 'getDisplayUserPanel()' class = 'col-sm-12 col-md-2 double-div user-info-container'>
-            
-            <img src='../../../assets/user.png' class = 'user-icon'>
 
-            <span bind-innerHTML = 'getLoggedUsername()'></span>
+            <div *ngIf = '!getUnregisteredPage()'>
 
-            <button (click) = 'signOut()'>Sign out</button>
+                <img src='../../../assets/user.png' class = 'user-icon'>
+
+                <span bind-innerHTML = 'getLoggedUsername()'></span>
+
+                <button (click) = 'signOut()'>Sign out</button>
+
+            </div>
+
+            <div *ngIf = 'getUnregisteredPage()'>
+
+                <button (click) = 'signIn()'>Sign in</button>
+
+            </div>
 
         </div>
 

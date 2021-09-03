@@ -17,6 +17,18 @@ export class ParticipantControler {
         })
     }
 
+    getAllParticipants = (req: express.Request, res: express.Response) => {
+
+        Participant.find({}, (err, participants) => {
+
+            if (err) console.log (err);
+            else
+                res.json (participants);
+                
+        });
+
+    }
+
     // submitParticipant
     // participant key: firstname, lastname, gender, country!!
     // required checks: if exists by key
@@ -32,7 +44,7 @@ export class ParticipantControler {
     //     - if sport does not match: report
     // if not exists:
     //      - check for team disciplines for potential maxPlayer breach
-    //               - if no breach: update
+    //               - if no breach: insert
     //               - if breach: report
 
     // TODO CHECK IF COMPETITION STARTED
