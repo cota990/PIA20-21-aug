@@ -26,8 +26,8 @@ export class ParticipantsComponent implements OnInit {
     this.participants = [];
     this.allParticipants = [];
     this.medalWinnersOnly = false;
-    this.participantsPerPage = 20;
-    this.participantsPerPageString = '20';
+    this.participantsPerPage = 10;
+    this.participantsPerPageString = '10';
     this.participantsForDisplay = [];
 
     this.countryService.getAllCountries().subscribe((countries: Country[]) => {
@@ -246,6 +246,11 @@ export class ParticipantsComponent implements OnInit {
 
   search () {
 
+    console.log (this.allParticipants);
+    console.log (this.sport);
+    console.log (this.country);
+    console.log (this.sport != 'All sports')
+
     this.participants = this.allParticipants;
 
     if (this.name != undefined && this.name != '') {
@@ -254,17 +259,39 @@ export class ParticipantsComponent implements OnInit {
 
     }
 
-    if (this.country != undefined && this.country != '' && this.country != 'All countries') {
+    console.log (this.participants);
+
+    if (this.country != undefined && this.country != '' && this.country != 'ALL') {
 
       this.participants = this.participants.filter( p => p.country.toLowerCase().includes(this.country.toLowerCase()));
 
     }
+
+    console.log (this.participants);
+
+    if (this.sport != undefined && this.sport != '' && this.sport != 'All sports') {
+
+      this.participants = this.participants.filter( p => p.sport.toLowerCase().includes(this.sport.toLowerCase()));
+
+    }
+
+    if (this.discipline != undefined && this.discipline != '' && this.discipline != 'All disciplines') {
+
+      console.log ('here');
+
+      this.participants = this.participants.filter( p => p.disciplines.includes(this.discipline));
+
+    }
+
+    console.log (this.participants);
 
     if (this.gender != undefined && this.gender != '') {
 
       this.participants = this.participants.filter( p => p.gender == this.gender);
       
     }
+
+    console.log (this.participants);
 
     this.numOfPagesParticipants = Math.floor((this.participants.length / this.participantsPerPage)) + 1;
     this.currentPageParticipants = 1;
