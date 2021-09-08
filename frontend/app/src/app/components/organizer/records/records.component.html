@@ -1,1 +1,44 @@
-<p>records works!</p>
+<div class='container-fluid records-container'>
+
+    <div class='row records-row'>
+
+        <div class = 'col-sm-12'>
+
+            <h3>Olympic records in individual disciplines</h3>
+
+            <table>
+
+                <tr>
+                    
+                    <th>Event</th>
+                    <th>Record</th>
+                    <th>Athlete</th>
+                    <th>Country</th>
+                    <th>Games</th>
+
+                </tr>
+
+                <tr *ngFor = 'let r of records'>
+
+                    <td>{{r.sport}} - {{r.discipline}} ({{r.gender}})</td>
+                    <td>{{r.record}}</td>
+                    <td>{{r.participant}}</td>
+                    <td>{{r.countryName}}</td>
+                    <td>{{r.place}} {{r.year}}</td>
+
+                </tr>
+
+                <tr *ngIf = 'records.length == 0'>
+
+                    <td colspan="5">
+                        No records in database
+                    </td>
+                </tr>
+            
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

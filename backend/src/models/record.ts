@@ -32,7 +32,15 @@ let record = new Schema(
             type: String
         },
 
+        countryName: {
+            type: String
+        },
+
         record: {
+            type: String
+        },
+
+        scoreFormat: {
             type: String
         }
     }

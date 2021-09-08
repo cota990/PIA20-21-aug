@@ -1,0 +1,43 @@
+.records-container {
+    height: 760px;
+    max-height: 760px;
+    min-height: 300px;
+    display: flex;
+    align-items: top;
+    padding-top: 20px;
+}
+
+.records-row {
+    width: 100%;
+    height: 600px;
+}
+
+table, th, td {
+    border: 1px solid red;
+    text-align: center;
+}
+
+table {
+    width: 100%
+}
+
+.country-name-with-flag {
+    text-align: left;
+}
+
+th, td {
+    padding: 10px;
+}
+
+th {
+    background-color: red;
+    color: white;
+}
+
+tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
