@@ -1,0 +1,133 @@
+<div class='container-fluid schedule-container'>
+
+    <div class='row schedule-row'>
+
+        <h3>Select available competitions for scheduling</h3>
+
+        <div class = 'col-sm-12 col-md-4 select-container'>
+                        
+            <span class = 'select-span'>Select sport: </span>
+            <select name = 'sport' [(ngModel)] = 'sport' class = 'select-field' (change) = 'goToSport()'>
+                <option *ngFor = 'let s of sportsOptions' label={{s}} value={{s}}></option>
+            </select>
+
+        </div>
+
+        <div class = 'col-sm-12 col-md-4 select-container' *ngIf = 'sport != undefined'>
+                        
+            <span class = 'select-span'>Select discipline & gender: </span>
+            <select name = 'discipline' [(ngModel)] = 'discipline' class = 'select-field' (change) = 'goToDiscipline()'>
+                <option *ngFor = 'let s of disciplineOptions' label={{s}} value={{s}}></option>
+            </select>
+
+        </div>
+
+        <div *ngIf = 'errorsFound != ""' class = 'col-sm-12 status-report'>
+            {{errorsFound}}
+        </div>
+
+        <div *ngIf = 'selectedCompetition != undefined'>
+
+            <div *ngIf = 'selectedCompetition.phases == "Q" || selectedCompetition.phases == "F"'>
+
+                <div *ngIf = 'selectedCompetition.schedule != undefined && selectedCompetition.schedule.length > 0'>
+
+                    <table>
+
+                        <tr>
+                    
+                            <th>Phase of competition</th>
+                            <th>Start time</th>
+                            <th>Location</th>
+                            <th>Action</th>
+        
+                        </tr>
+
+                        <tr *ngFor = 'let s of selectedCompetition.schedule'>
+                    
+                            <td>
+                                
+                                <span *ngIf = 's.phase == "Q"'>Qualification {{s.group}}</span>
+                                <span *ngIf = 's.phase == "F"'>Finals</span>
+
+                            </td>
+                            
+                            <td>
+
+                                <input type='text' name = 'startDateTime' placeholder='yyyy-MM-dd hh:mm:ss' [(ngModel)]='s.startDateTime' class = 'input-field' [disabled] = 's.confirmed || !s.canAssign'>
+
+                            </td>
+                            
+                            <td>
+
+                                <select name = 'location' [(ngModel)] = 's.location' class = 'select-field' [disabled] = 's.confirmed || !s.canAssign'>
+                                    <option *ngFor = 'let l of selectedCompetition.locations' label={{l}} value={{l}}></option>
+                                </select>
+
+                            </td>
+
+                            <td>
+
+                                <div *ngIf = 's.confirmed'>
+
+                                    <span>Event date and location already confirmed</span>
+
+                                </div>
+
+                                <div *ngIf = '!s.canAssign'>
+
+                                    <span>Event date and location can't be assigned before all previous events are set</span>
+
+                                </div>
+
+                                <div *ngIf = '!s.confirmed && s.canAssign'>
+
+                                    <button (click) = 'assignStartAndLocation (s)'>Assign start & location</button>
+
+                                </div>
+
+                            </td>
+        
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <div *ngIf = 'selectedCompetition.schedule == undefined || selectedCompetition.schedule.length == 0'>
+
+                    <div *ngIf = 'selectedCompetition.category == "I"'>
+
+                        Number of participants for {{selectedCompetition.discipline}}({{selectedCompetition.gender}}) is : {{selectedCompetition.participants.length}}
+                        <button (click) = 'generateEvents ()'>Generate events</button>
+
+                    </div>
+
+                    <div *ngIf = 'selectedCompetition.category == "T"'>
+
+                        Number of teams for {{selectedCompetition.discipline}}({{selectedCompetition.gender}}) is : {{selectedCompetition.teams.length}}
+                        <button (click) = 'generateEvents ()'>Generate events</button>
+                        
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div *ngIf = 'selectedCompetition.phases == "K"'>
+
+                Knockout stage
+
+            </div>
+
+            <div *ngIf = 'selectedCompetition.phases == "G"'>
+
+                Group stage
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -11,6 +11,10 @@ userRouter.route('/register').post(
     (req, res) => new UserControler().register(req, res)
 );
 
+userRouter.route('/changePassword').post(
+    (req, res) => new UserControler().changePassword(req, res)
+);
+
 userRouter.route('/pendingRequests').get(
     (req, res) => new UserControler().pendingRequests(req, res)
 );

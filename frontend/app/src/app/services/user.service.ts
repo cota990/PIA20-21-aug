@@ -10,7 +10,7 @@ export class UserService {
 
   uri='http://localhost:4000/users';
 
-  login (username, password) {
+  login (username: string, password: string) {
 
     const data = {
       username: username,
@@ -21,12 +21,11 @@ export class UserService {
 
   }
 
-  register (username, password, passwordConfirmation, mail, firstname, lastname, country, type) {
+  register (username: string, password: string, mail: string, firstname: string, lastname: string, country: string, type: string) {
 
     const data = {
       username: username,
       password: password,
-      passwordConfirmation: passwordConfirmation,
       mail: mail,
       firstname: firstname,
       lastname: lastname,
@@ -36,6 +35,18 @@ export class UserService {
 
     return this.http.post(`${this.uri}/register`, data);
   
+  }
+
+  changePassword (username: string, oldPassword: string, newPassword: string) {
+
+    const data = {
+      username: username,
+      oldPassword: oldPassword,
+      newPassword: newPassword
+    }
+
+    return this.http.post(`${this.uri}/changePassword`, data);
+
   }
 
   pendingRequests () {

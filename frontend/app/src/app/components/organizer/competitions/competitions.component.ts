@@ -506,7 +506,7 @@ export class CompetitionsComponent implements OnInit {
 
     else if (format == 'short-race') {
 
-      let times = score.split(':');
+      let times = score.split(',');
 
       if (times.length == 2) {
 
@@ -531,19 +531,27 @@ export class CompetitionsComponent implements OnInit {
 
       let times = score.split(':');
 
-      if (times.length == 3) {
+      if (times.length == 2) {
 
-        let minutes = parseInt(times[0]);
-        let seconds = parseInt(times[1]);
-        let hundreths = parseInt(times[2]);
+        let secondsHundreths = times[1].split(',');
 
-        if (isNaN (minutes) || isNaN (seconds) || isNaN (hundreths))
-          return false;
+        if (secondsHundreths.length == 2) {
 
-        else if (minutes >= 60 || seconds >= 60 || hundreths >= 100)
-          return false;
+          let minutes = parseInt(times[0]);
+          let seconds = parseInt(secondsHundreths[0]);
+          let hundreths = parseInt(secondsHundreths[1]);
 
-        else return true;
+          if (isNaN (minutes) || isNaN (seconds) || isNaN (hundreths))
+            return false;
+
+          else if (minutes >= 60 || seconds >= 60 || hundreths >= 100)
+            return false;
+
+          else return true;
+
+        }
+
+        else return false;
 
       }
       
@@ -902,6 +910,8 @@ export class CompetitionsComponent implements OnInit {
               this.teamsOptions = [];
               this.participantsOptions = [];
               this.userService.getAvailableDelegates().subscribe( (delegates: User[]) => {
+
+                this.availableDelegates = [];
 
                 delegates.forEach( (delegate) => {
           

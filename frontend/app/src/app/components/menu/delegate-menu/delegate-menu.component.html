@@ -1,1 +1,19 @@
-<p>delegate-menu works!</p>
+<div class='container-fluid'>
+
+    <div class='row'>
+        
+        <div class = 'col-sm-6 col-md-4 menu-text regular-div' (click) = 'setRoute("delegate/schedule")' [ngClass] = 'scheduleClicked ? "menu-container-clicked" : "menu-container"' >
+            
+            Schedule
+        
+        </div>
+
+        <div class = 'col-sm-6 col-md-4 menu-text regular-div' (click) = 'setRoute("delegate/results")' [ngClass] = 'resultsClicked ? "menu-container-clicked" : "menu-container"' >
+            
+            Results
+        
+        </div>
+    
+    </div>
+
+</div>

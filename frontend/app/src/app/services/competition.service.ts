@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Competition } from '../models/Competition';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,40 @@ export class CompetitionService {
 
     return this.http.post(`${this.uri}/startCompetitionByOrganizer`, data);
   
+  }
+
+  getAllCompetitionsForDelegate (delegate: string) {
+
+    const data = {
+      delegate: delegate
+    }
+
+    return this.http.post(`${this.uri}/getAllCompetitionsForDelegate`, data);
+
+  }
+
+  generateSchedule (competition: Competition) {
+
+    const data = competition;
+
+    return this.http.post(`${this.uri}/generateSchedule`, data);
+
+  }
+
+  updateSchedule (competition: Competition) {
+
+    const data = competition;
+
+    return this.http.post(`${this.uri}/updateSchedule`, data);
+
+  }
+
+  submitResults (competition: Competition) {
+
+    const data = competition;
+
+    return this.http.post(`${this.uri}/submitResults`, data);
+
   }
 
 }

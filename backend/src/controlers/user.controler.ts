@@ -1,18 +1,22 @@
 import express from 'express';
+import { Utils } from '../utils/utils';
 import User from '../models/user';
 
 export class UserControler {
 
-    login = (req: express.Request, res: express.Response) => {
+    login = async (req: express.Request, res: express.Response) => {
 
         let username = req.body.username;
         let password = req.body.password;
 
-        User.findOne({'username': username, 'password': password}, (err, user) => {
+        /*User.findOne({'username': username, 'password': password}, (err, user) => {
             if (err) console.log (err);
             else
                 res.json(user);
-        })
+        })*/
+
+        const user = await User.findOne({'username': username, 'password': password});
+        res.json (user);
 
     }
 
@@ -73,63 +77,12 @@ export class UserControler {
                     }
                 })
 
-                if (password.length < 8 || password.length > 12) {
+                let passwordCheck = new Utils().passwordCheck(password);
+
+                if (passwordCheck.errorFound) {
 
                     errorFound = true;
-                    errorReport.passwordRules += 'Password must be between 8 and 12 characters long. ';
-
-                }
-
-                let smallLettersCounter = 0;
-                let capitalLettersCounter = 0;
-                let digitsCounter = 0;
-                let specialCharactersCounter = 0;
-
-                let smallLetterRegex = new RegExp ('[a-z]');
-                let capitalLetterRegex = new RegExp ('[A-Z]');
-                let digitRegex = new RegExp ('[0-9]');
-                let specialCharRegex = new RegExp ('[!@#$%^&*]');
-
-                for (let i = 0; i < password.length; i++) {
-
-                    let character = password.charAt (i);
-
-                    if (smallLetterRegex.test(character))
-                        smallLettersCounter++;
-                    if (capitalLetterRegex.test(character))
-                        capitalLettersCounter++;
-                    if (digitRegex.test(character))
-                        digitsCounter++;
-                    if (specialCharRegex.test(character))
-                        specialCharactersCounter++;
-
-                }
-
-                if (smallLettersCounter < 3) {
-
-                    errorFound = true;
-                    errorReport.passwordRules += 'Password must have at least three small letters. ';
-
-                }
-
-                if (capitalLettersCounter < 1) {
-
-                    errorFound = true;
-                    errorReport.passwordRules += 'Password must have at least one capital letter. ';
-
-                }
-
-                if (digitsCounter < 2) {
-
-                    errorFound = true;
-                    errorReport.passwordRules += 'Password must have at least two digits. ';
-
-                }
-
-                if (specialCharactersCounter < 2) {
-
-                    errorFound = true;
-                    errorReport.passwordRules += 'Password must have at least two special characters. ';
+                    errorReport.passwordRules = passwordCheck.passwordRules;
 
                 }
 
@@ -164,6 +117,59 @@ export class UserControler {
 
         })
 
+    }
+
+    changePassword = (req: express.Request, res: express.Response) => {
+
+        let username = req.body.username;
+        let oldPassword = req.body.oldPassword;
+        let newPassword = req.body.newPassword;
+
+        User.findOne({'username': username, 'password': oldPassword}, (err, user) => {
+
+            if (err) console.log (err);
+            else {
+
+                if (user) {
+
+                    let errorFound = false;
+                    let errorReport = {
+                        message: 'Errors found',
+                        passwordRules: ''
+                    };
+
+                    let passwordCheck = new Utils().passwordCheck(newPassword);
+
+                    if (passwordCheck.errorFound) {
+
+                        errorFound = true;
+                        errorReport.passwordRules = passwordCheck.passwordRules;
+
+                    }
+
+                    if (errorFound)
+                        return res.json(errorReport);
+
+                    else {
+
+                        User.findOneAndUpdate({'username': username, 'password': oldPassword}, {password: newPassword}, (err, user) => {
+
+                            if (err) console.log (err);
+                            else if (user)
+                                return res.json ({'message': 'Password updated'});
+                            else res.json ({'message': 'Something went wrong'});
+
+                        })
+                    }
+
+                }
+
+                else
+                    return res.json({'message': 'No user found with provided credentials'});
+
+            }
+
+        })
     }
 
     pendingRequests = (req: express.Request, res: express.Response) => {

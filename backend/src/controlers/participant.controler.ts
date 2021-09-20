@@ -1,8 +1,9 @@
 import express from 'express';
 import Participant from '../models/participant';
 import Country from '../models/country';
+import Competition from '../models/competition';
+import { Utils } from '../utils/utils';
 import Team from '../models/team';
-import Sport from '../models/sport';
 
 export class ParticipantControler {
 
@@ -24,176 +25,253 @@ export class ParticipantControler {
             if (err) console.log (err);
             else
                 res.json (participants);
-                
+
         });
 
     }
 
     // submitParticipant
     // participant key: firstname, lastname, gender, country!!
-    // required checks: if exists by key
-    // if exists:
-    //     - check if sport matches
-    //     - if sport matches:
-    //         - check if new disciplines
-    //         - if new disciplines:
-    //               - check for team disciplines for potential maxPlayer breach
-    //               - if no breach: update
-    //               - if breach: report
-    //         - if no new disciplines: report
-    //     - if sport does not match: report
-    // if not exists:
-    //      - check for team disciplines for potential maxPlayer breach
-    //               - if no breach: insert
-    //               - if breach: report
+    // check if competition for disciplines have already started; if any, report error
+    // check if participant is already added
+    // if added:
+    //      - check if sport matches
+    //      - if matches check if there is any new disciplines
+    //          - if new disciplines, check for any team disciplines for potential maximum player breach
+    //              - if no breach: update participants disciplines (and update team players for team disciplines)
+    //              - if breach: report error (max players for disciplines)
+    //          - if no new disciplines : report error (no new disciplines to add)
+    //      - if no match: report error (participant already added to different sport)
+    // if not added:
+    //      - check for any team disciplines for potential maximum player breach
+    //          - if no breach: insert new participant, update country number of participants and update team players for team discipline
+    //          - if breach: report error (max players for disciplines)
 
-    // TODO CHECK IF COMPETITION STARTED
-
-    submitParticipant = (req: express.Request, res: express.Response) => {
+    submitParticipant = async (req: express.Request, res: express.Response) => {
 
         let firstname =  req.body.firstname;
         let lastname =  req.body.lastname;
         let gender = req.body.gender;
         let sport =  req.body.sport;
-        let disciplines: Array<String> = req.body.disciplines;
+        let disciplines: string[] = req.body.disciplines;
         let country = req.body.country;
         let fullname = firstname + ' ' + lastname;
 
-        // check for participant by key
-        Participant.findOne({'firstname': firstname, 'lastname': lastname, 'gender': gender, 'country': country}, (err, participant) => {
+        let updateDisciplines: string[];
+        let teamDisciplines: string[] = [];
 
-            if (err) console.log (err);
+        let errorFound: boolean = false;
+
+        let errorReport = {
+            message: 'Errors found',
+            competitionsStarted: '',
+            teamDisciplines: '',
+            differentSport: '',
+            noNewDisciplines: ''
+        };
+
+        const competitions = await Competition.find ({'sport': sport, 'gender': gender, 'discipline': {$in: disciplines}});
+
+        if (competitions.length > 0) {
+
+            let report = 'Competitions already started for following disciplines: ';
+
+            competitions.forEach ((c) => {
+
+                let compObj = c.toObject({getters: true});
+
+                report += compObj.discipline + ', ';
+
+            })
+
+            report = report.slice(0, report.length - 2);
+            report += '.';
+
+            errorReport.competitionsStarted = report;
+            errorFound = true;
+
+        }
+
+        const participant = await Participant.findOne({'firstname': firstname, 'lastname': lastname, 'gender': gender, 'country': country});
+
+        if (participant) {
+
+            // participant found; check for sport match
+            let partObj = participant.toObject({ getters: true });
+
+            if (partObj.sport != sport) {
+
+                errorFound = true;
+                errorReport.differentSport = 'Participant already added for different sport';
+
+            }
+
             else {
 
-                if (participant) {
+                // sport matches; check for new disciplines
 
-                    // participant found; check for sport match
-                    let partObj = participant.toObject({ getters: true });
+                updateDisciplines = partObj.disciplines;
+                let newDisciplines: string[] = [];
 
-                    if (partObj.sport != sport) {
+                disciplines.forEach ((discipline) => {
 
-                        return res.status(200).json({'message': 'Participant already added for different sport'});
+                    if (partObj.disciplines.indexOf(discipline) == -1) 
+                        newDisciplines.push (discipline);
+                    updateDisciplines.push (discipline);
+
+                })
+
+                if (newDisciplines.length == 0) {
+
+                    errorFound = true;
+                    errorReport.noNewDisciplines = 'Participant already added for for selected disciplines';
+
+                }
+
+                else {
+
+                    const checkForTeamDisciplines = await new Utils().checkForTeamDisciplines(newDisciplines, country, gender, sport);
+
+                    if (!checkForTeamDisciplines.proceed) {
+                
+                        errorFound = true;
+                        errorReport.teamDisciplines = checkForTeamDisciplines.report;
 
                     }
 
                     else {
 
-                        // sport matches; check for new disciplines
+                        teamDisciplines = checkForTeamDisciplines.disciplines;
 
-                        let updateDisciplines: String[] = partObj.disciplines;
-                        let newDisciplines: String[] = [];
+                    }
 
-                        disciplines.forEach ((discipline) => {
+                }
 
-                            if (partObj.disciplines.indexOf(disciplines) == -1) 
-                                newDisciplines.push (discipline);
-                            updateDisciplines.push (discipline);
+            }
 
-                        })
+        }
 
-                        if (newDisciplines.length == 0) {
+        else {
 
-                            return res.status(200).json ({'message': 'Submitted participant already added for those disciplines'});
+            // participant not found
+            // check for team disciplines for potential maxPlayers breach
+
+            const checkForTeamDisciplines = await new Utils().checkForTeamDisciplines(disciplines, country, gender, sport);
+
+            console.log (checkForTeamDisciplines);
+
+            if (!checkForTeamDisciplines.proceed) {
+                
+                errorFound = true;
+                errorReport.teamDisciplines = checkForTeamDisciplines.report;
+
+            }
+
+            else {
+
+                teamDisciplines = checkForTeamDisciplines.disciplines;
+                
+            }
+
+        }
+
+        if (errorFound) {
+
+            res.json (errorReport);
+
+        }
+
+        else {
+
+            if (participant) {
+
+                let updatedParticipant = await Participant.findOneAndUpdate({'firstname': firstname, 'lastname': lastname, 'gender': gender, 'country': country}, {'disciplines': updateDisciplines}).exec();
+                
+                if (updatedParticipant) {
+
+                    if (teamDisciplines.length > 0) {
+
+                        for (let i = 0; i < teamDisciplines.length; i++) {
+
+                            let teamUpdated = await Team.findOneAndUpdate({'country': country, 'gender': gender, 'sport': sport, 'discipline': teamDisciplines[i]}, {$inc : {'numOfPlayers' : 1}});
+
+                            if (!teamUpdated)
+                                errorFound = true;
 
                         }
 
-                        else {
+                        if (errorFound)
+                            return res.status(200).json ({'message': 'Error while updating participatints disciplines'});
 
-                            // update required; check for team disciplines
+                        else
+                            return res.status(200).json ({'message': 'Successfully updated participants disciplines'});
 
-                            Sport.find({'type': 'T'}, (err, sports) => {
+                    }
 
-                                if (err) console.log (err);
-                        
-                                else {
+                    else
+                        return res.status(200).json ({'message': 'Successfully updated participants disciplines'});
 
-                                    let teamDisciplines: String[] = [];
-                                    let maxPlayersArray: Number[] = [];
+                }
 
-                                    sports.forEach ((sport) => {
-                                        
-                                        let foundSport = sport.toObject({ getters: true });
+                else {
 
-                                        if (newDisciplines.indexOf (foundSport.discipline) >= 0) {
-                                            // perform check
+                    return res.status(200).json ({'message': 'Error while updating participatints disciplines'});
 
-                                            teamDisciplines.push (foundSport.discipline);
-                                            maxPlayersArray.push (foundSport.maxPlayers);
-                                        }
-                                    
-                                    });
+                }
 
-                                    if (teamDisciplines.length > 0) {
+            }
 
-                                        // found team disciplines; find all participants in all disciplines
-                                        Participant.find({'country': country, 'gender': gender, 'sport': sport, 'disciplines': {$in: teamDisciplines}}, (err, p) => {
+            else {
 
-                                            if (err) console.log (err);
-                                            else {
+                let data = {
+                    firstname: firstname,
+                    lastname: lastname,
+                    gender: gender,
+                    sport: sport,
+                    disciplines: disciplines,
+                    country: country,
+                    fullname: fullname
+                }
 
-                                                // must order received participants by discipline
+                let newParticipant = new Participant (data);
 
-                                                let i = 0;
+                const newP = await newParticipant.save();
 
-                                                for (i = 0; i < teamDisciplines.length; i = i + 1) {
+                if (newP) {
 
-                                                    let cnt = 0;
+                    const countryUpdated = await Country.findOneAndUpdate({'abbr': country}, {$inc : {'numOfParticipants' : 1}});
 
-                                                    p.forEach ((part) => {
+                    if (countryUpdated) {
 
-                                                        let partObj = part.toObject({ getters: true });
+                        if (teamDisciplines.length > 0) {
 
-                                                        if (partObj.disciplines.indexOf(teamDisciplines[i]) >= 0)
-                                                            cnt++;
-                                                    })
+                            for (let i = 0; i < teamDisciplines.length; i++) {
 
-                                                    if (cnt >= maxPlayersArray[i])
-                                                        return res.status(200).json({'message': 'Cant add user to ' + teamDisciplines[i] + ' because it would exceed maximum allowed players'});
-                                                
-                                                }
-
-                                                // if here, participant can be updated
-                                                Participant.findOneAndUpdate({'firstname': firstname, 'lastname': lastname, 'gender': gender, 'country': country}, {'disciplines': updateDisciplines}, (err, updated) => {
-
-                                                    if (err) console.log (err);
-                                                    else {
-                
-                                                        if (updated)
-                                                            return res.status(200).json ({'message': 'Successfully updated participants disciplines'});
-                
-                                                        else
-                                                            return res.status(200).json ({'message': 'Error while updating participatints disciplines'});
-                                                    }
-                                                });
-
-                                            }
-
-                                        });
-
-                                    }
-
-                                    else {
-
-                                        // no team disciplines; procceed to update
-                                        Participant.findOneAndUpdate({'firstname': firstname, 'lastname': lastname, 'gender': gender, 'country': country}, {'disciplines': updateDisciplines}, (err, updated) => {
-
-                                            if (err) console.log (err);
-                                            else {
-        
-                                                if (updated)
-                                                    return res.status(200).json ({'message': 'Successfully updated participants disciplines'});
-        
-                                                else
-                                                    return res.status(200).json ({'message': 'Error while updating participatints disciplines'});
-                                            }
-                                        });
-
-                                    }
-
-                                }
-                            });
-
+                                console.log (teamDisciplines[i]);
+    
+                                let teamUpdated = await Team.findOneAndUpdate({'country': country, 'gender': gender, 'sport': sport, 'discipline': teamDisciplines[i]}, {$inc : {'numOfPlayers' : 1}});
+    
+                                if (!teamUpdated)
+                                    errorFound = true;
+    
+                            }
+    
+                            if (errorFound)
+                                return res.status(200).json ({'message': 'There was an error while processing your request. Please try again later'});
+    
+                            else
+                                return res.status(200).json ({'message': 'Successfully added new participant'});
+    
                         }
+    
+                        else
+                            return res.status(200).json ({'message': 'Successfully added new participant'});
+
+                    }
+
+                    else {
+
+                        return res.status(200).json ({'message': 'There was an error while processing your request. Please try again later'});
 
                     }
 
@@ -201,139 +279,14 @@ export class ParticipantControler {
 
                 else {
 
-                    // participant not found
-                    // check for team disciplines for potential maxPlayers breach
+                    return res.status(200).json ({'message': 'There was an error while processing your request. Please try again later'});
 
-                    Sport.find({'type': 'T'}, (err, sports) => {
-
-                        if (err) console.log (err);
-                        
-                        else {
-
-                            let teamDisciplines: String[] = [];
-                            let maxPlayersArray: Number[] = [];
-
-                            console.log (disciplines);
-
-                            sports.forEach ((sport) => {
-                                
-                                let foundSport = sport.toObject({ getters: true });
-
-                                console.log (foundSport);
-                                console.log (disciplines.indexOf (foundSport.discipline));
-
-                                if (disciplines.indexOf (foundSport.discipline) >= 0) {
-                                    // perform check
-
-                                    teamDisciplines.push (foundSport.discipline);
-                                    maxPlayersArray.push (foundSport.maxPlayers);
-                                }
-                            
-                            })
-
-                            console.log (teamDisciplines.length);
-                            console.log (maxPlayersArray.length);
-                            console.log (teamDisciplines);
-                            console.log (maxPlayersArray);
-
-                            if (teamDisciplines.length > 0) {
-
-                                // found team disciplines; find all participants in all disciplines
-                                Participant.find({'country': country, 'gender': gender, 'sport': sport, 'disciplines': {$in: teamDisciplines}}, (err, p) => {
-
-                                    if (err) console.log (err);
-                                    else {
-
-                                        // must order received participants by discipline
-
-                                        let i = 0;
-
-                                        for (i = 0; i < teamDisciplines.length; i = i + 1) {
-
-                                            let cnt = 0;
-
-                                            p.forEach ((part) => {
-
-                                                let partObj = part.toObject({ getters: true });
-
-                                                if (partObj.disciplines.indexOf(teamDisciplines[i]) >= 0)
-                                                    cnt++;
-                                            })
-
-                                            if (cnt >= maxPlayersArray[i])
-                                                return res.status(200).json({'message': 'Cant add user to ' + teamDisciplines[i] + ' because it would exceed maximum allowed players'});
-                                        
-                                        }
-
-                                        // if here, participant can be added
-                                        let data = {
-                                            firstname: firstname,
-                                            lastname: lastname,
-                                            gender: gender,
-                                            sport: sport,
-                                            disciplines: disciplines,
-                                            country: country,
-                                            fullname: fullname
-                                        }
-                    
-                                        let newParticipant = new Participant (data);
-                    
-                                        newParticipant.save().then( (part) => {
-
-                                            Country.findOneAndUpdate({'abbr': country}, {$inc : {'numOfParticipants' : 1}}, (err, c) => {
-                                                if (err) console.log (err);
-                                                else {
-                                                    return res.status(200).json ({'message': 'Successfully added new participant'});
-                                                }
-                                            })
-                                            
-                                        }).catch ((err) => {
-                                            return res.status(200).json ({'message': 'There was an error while processing your request. Please try again later'});
-                                        })
-
-                                    }
-
-                                });
-                            
-                            }
-
-                            else {
-
-                                // no team disciplines; procceed to addition
-                                let data = {
-                                    firstname: firstname,
-                                    lastname: lastname,
-                                    gender: gender,
-                                    sport: sport,
-                                    disciplines: disciplines,
-                                    country: country,
-                                    fullname: fullname
-                                }
-            
-                                let newParticipant = new Participant (data);
-            
-                                newParticipant.save().then( (part) => {
-
-                                    Country.findOneAndUpdate({'abbr': country}, {$inc : {'numOfParticipants' : 1}}, (err, c) => {
-                                        if (err) console.log (err);
-                                        else {
-                                            return res.status(200).json ({'message': 'Successfully added new participant'});
-                                        }
-                                    })
-                                    
-                                }).catch ((err) => {
-                                    return res.status(200).json ({'message': 'There was an error while processing your request. Please try again later'});
-                                })
-
-                            }
-                        
-                        }
-                    
-                    });
                 }
+
             }
 
-        })
+        }
+
     }
 
     getAllParticipantsForIndividualDiscipline = (req: express.Request, res: express.Response) => {

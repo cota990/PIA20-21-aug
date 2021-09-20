@@ -36,7 +36,7 @@ let sport = new Schema ({
 
     // format of competition metadata
 
-    // format of scores input: match (poeni_tim1 : poeni_tim2), short race (ss:tt), medium race (mm:ss:tt), long race (hh:mm:ss), jump/throw (m,cm), num (number)
+    // format of scores input: match (poeni_tim1 : poeni_tim2), short race (ss,tt), medium race (mm:ss,tt), long race (hh:mm:ss), jump/throw (m,cm), num (number)
     scoreFormat: {
         type: String
     },
@@ -44,6 +44,16 @@ let sport = new Schema ({
     // list of allowed values for results
     allowedResults: {
         type: Array(String)
+    },
+
+    // determines phases: F - only one event (Finals), K - knockout stage, G - group + knockout stage
+    phases: {
+        type: String
+    },
+
+    // for sports rounds or series (group stages, athletics jump and throw disciplines, shooting)
+    numOfRounds: {
+        type: Number
     }
 
 });

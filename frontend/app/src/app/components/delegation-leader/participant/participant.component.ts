@@ -155,10 +155,29 @@ export class ParticipantComponent implements OnInit {
         
         this.participantsService.submitParticipant(this.firstname, this.lastname, this.gender, this.sport, this.disciplines, this.country).subscribe((res) => {
           console.log (res);
-          this.errorsFound = res['message'];
-        })
+          
+          if (res['message'] == 'Errors found') {
+          
+            if (res['competitionsStarted'] != '')
+              this.errorsFound += res['competitionsStarted'] + '. ';
+  
+            if (res['teamDisciplines'] != '')
+              this.errorsFound += res['teamDisciplines'] + '. ';
+  
+            if (res['differentSport'] != '')
+              this.errorsFound += res['differentSport'] + '. ';
+  
+            if (res['noNewDisciplines'] != '')
+              this.errorsFound += res['noNewDisciplines'];
+            
+          }
+  
+          else this.errorsFound = res['message'];
+
+        });
+
       }
-  }
+    }
 
   }
 

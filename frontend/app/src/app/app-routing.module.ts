@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DelegateComponent } from './components/delegate/delegate.component';
+import { ResultsComponent } from './components/delegate/results/results.component';
+import { ScheduleComponent } from './components/delegate/schedule/schedule.component';
 import { DelegationLeaderComponent } from './components/delegation-leader/delegation-leader.component';
 import { OverviewComponent } from './components/delegation-leader/overview/overview.component';
 import { ParticipantComponent } from './components/delegation-leader/participant/participant.component';
@@ -21,7 +23,6 @@ import { UnregisteredComponent } from './components/unregistered/unregistered.co
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
-  {path: 'delegate', component: DelegateComponent},
   
   // unregistered routes and paths
   {
@@ -98,6 +99,27 @@ const routes: Routes = [
       }
     ]
   },
+
+  // competition delegate routes and paths
+  {
+    path: 'delegate', 
+    component: DelegateComponent,
+    children: [
+      {
+        path: '',
+        component: ScheduleComponent
+      },
+      {
+        path: 'schedule',
+        component: ScheduleComponent
+      },
+      {
+        path: 'results',
+        component: ResultsComponent
+      }
+    ]
+  },
+
   {path: 'password-reset', component: PasswordResetComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'unregistered', component: UnregisteredMenuComponent, outlet: 'menu'},

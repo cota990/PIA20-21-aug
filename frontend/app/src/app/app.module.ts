@@ -32,6 +32,8 @@ import { RequestsComponent } from './components/organizer/requests/requests.comp
 import { RecordsComponent } from './components/organizer/records/records.component';
 import { FormatComponent } from './components/organizer/format/format.component';
 import { CompetitionParticipantsComponent } from './components/organizer/competition-participants/competition-participants.component';
+import { ScheduleComponent } from './components/delegate/schedule/schedule.component';
+import { ResultsComponent } from './components/delegate/results/results.component';
 
 
 @NgModule({
@@ -62,7 +64,9 @@ import { CompetitionParticipantsComponent } from './components/organizer/competi
     RequestsComponent,
     RecordsComponent,
     FormatComponent,
-    CompetitionParticipantsComponent
+    CompetitionParticipantsComponent,
+    ScheduleComponent,
+    ResultsComponent
   ],
   imports: [
     BrowserModule,

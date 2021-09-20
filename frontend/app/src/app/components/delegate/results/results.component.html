@@ -1,0 +1,105 @@
+<div class='container-fluid results-container'>
+
+    <div class='row results-row'>
+
+        <h3>Select available competitions for results submission</h3>
+
+        <div class = 'col-sm-12 col-md-4 select-container'>
+                        
+            <span class = 'select-span'>Select sport: </span>
+            <select name = 'sport' [(ngModel)] = 'sport' class = 'select-field' (change) = 'goToSport()'>
+                <option *ngFor = 'let s of sportsOptions' label={{s}} value={{s}}></option>
+            </select>
+
+        </div>
+
+        <div class = 'col-sm-12 col-md-4 select-container' *ngIf = 'sport != undefined'>
+                        
+            <span class = 'select-span'>Select discipline & gender: </span>
+            <select name = 'discipline' [(ngModel)] = 'discipline' class = 'select-field' (change) = 'goToDiscipline()'>
+                <option *ngFor = 'let s of disciplineOptions' label={{s}} value={{s}}></option>
+            </select>
+
+        </div>
+
+        <div *ngIf = 'errorsFound != ""' class = 'col-sm-12 status-report'>
+            {{errorsFound}}
+        </div>
+
+        <div *ngIf = 'selectedCompetition != undefined'>
+
+            <div *ngIf = 'selectedCompetition.status == "D"'>
+
+                <div *ngIf = 'selectedCompetition.phases == "Q" || selectedCompetition.phases == "F"' class='container-fluid'>
+                
+                    <span *ngIf = 'selectedCompetition.round == "Q"'>Current round: Qualifications</span>
+                    <span *ngIf = 'selectedCompetition.round == "F"'>Current round: Finals</span>
+
+                    <div class = 'row'>
+
+                        <div *ngFor = 'let c of competitors' class='col-sm-6 col-md-4'>
+
+                            {{c.groupName}}
+
+                            <div *ngFor = 'let cc of c.competitors' class='container-fluid'>
+
+                                <div class = 'row'>
+                                
+                                    <div class='col-sm-6 '>{{cc.fullname}}</div>
+
+                                    <div class='col-sm-6 '>
+
+                                        <input *ngIf = 'selectedCompetition.round == "Q" &&  (selectedCompetition.numOfRounds == undefined || selectedCompetition.numOfRounds == 1)' 
+                                            type='text' name = 'result' placeholder='enter result...' [(ngModel)]='cc.qualificationResult' class = 'input-field'>
+
+                                        <input *ngIf = 'selectedCompetition.round == "F" &&  (selectedCompetition.numOfRounds == undefined || selectedCompetition.numOfRounds == 1)' 
+                                            type='text' name = 'result' placeholder='enter result...' [(ngModel)]='cc.finalResult' class = 'input-field'>
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <button (click) = 'submitResultsForRound(c.competitors)'>Submit scores</button>
+                            
+                        </div>
+
+                        
+
+                    </div>
+    
+                </div>
+    
+                <div *ngIf = 'selectedCompetition.phases == "K"'>
+    
+                    Knockout stage
+    
+                </div>
+    
+                <div *ngIf = 'selectedCompetition.phases == "G"'>
+    
+                    Group stage
+    
+                </div>
+
+            </div>
+
+            <div *ngIf = 'selectedCompetition.status == "O"'>
+
+                Schedule not generated for this competition
+
+            </div>
+
+            <div *ngIf = 'selectedCompetition.status == "C"'>
+
+                Competition is finnished
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

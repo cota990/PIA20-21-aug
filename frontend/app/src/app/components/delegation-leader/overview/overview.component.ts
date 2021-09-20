@@ -20,13 +20,28 @@ export class OverviewComponent implements OnInit {
 
     let signedInUser = JSON.parse(sessionStorage.getItem('user'));
 
+    this.selectedSport = undefined;
+    this.selectedDiscipline = undefined;
+    this.disciplineOptions = undefined;
+
     this.countryService.getCountryByAbbr(signedInUser.country).subscribe( (country: Country) => {
       this.country = country;
       this.countryName = country.name;
     })
 
     this.sportsService.getAllSportsInOlympics().subscribe((sports: Sport[]) => {
+      
       this.allSports = sports;
+
+      this.sportOptions = [];
+
+      sports.forEach ((s) => {
+
+        if (this.sportOptions.indexOf (s.name) == -1)
+          this.sportOptions.push (s.name);
+      
+        })
+
     })
 
     this.participantService.getAllParticipantsForCountry(signedInUser.country).subscribe( (participants: Participant[]) => {
@@ -70,5 +85,78 @@ export class OverviewComponent implements OnInit {
   countryName: string = '';
 
   participantsSports: ParticipantPerSport[] = [];
+
+  selectedSport: string;
+  selectedDiscipline: string;
+
+  sportOptions: string[];
+  disciplineOptions: string[];
+
+  displayParticipants: Participant[];
+
+  selectSportFromTable(sport: string) {
+    
+    this.selectedSport = sport;
+    this.selectedDiscipline = undefined;
+    this.displayParticipants = undefined;
+    this.goToSport ();
+
+  }
+
+  goToStart() {
+
+    this.selectedDiscipline = undefined;
+    this.selectedSport = undefined;
+    this.displayParticipants = undefined;
+
+  }
+
+  goToSport() {
+
+    console.log ('display disciplines');
+
+    this.disciplineOptions = [];
+    this.selectedDiscipline = undefined;
+    this.displayParticipants = undefined;
+
+    this.allSports.forEach ((s) => {
+
+      if (s.name == this.selectedSport
+            && s.discipline != this.selectedSport)
+            this.disciplineOptions.push (s.discipline);
+
+    })
+
+    if (this.disciplineOptions.length == 0)
+      this.filterParticipants ();
+
+  }
+
+  goToDiscipline() {
+    this.filterParticipants ();
+  }
+
+  filterParticipants () {
+
+    this.displayParticipants = this.allParticipants.filter(p => p.sport == this.selectedSport);
+
+    if (this.disciplineOptions.length > 0)
+      this.displayParticipants = this.displayParticipants.filter (p => p.disciplines.includes(this.selectedDiscipline));
+
+      this.displayParticipants.sort ((a,b) => {
+
+        if (a.lastname > b.lastname) return 1;
+        else if (a.lastname < b.lastname) return -1;
+        else {
+
+          if (a.firstname > b.firstname) return 1;
+          else if (a.firstname < b.firstname) return -1;
+          else return 0;
+          
+        };
+
+      });
+    
+  }
 
 }

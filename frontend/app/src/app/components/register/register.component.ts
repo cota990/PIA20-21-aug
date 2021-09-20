@@ -65,7 +65,7 @@ export class RegisterComponent implements OnInit {
 
       this.errorsFound = '';
 
-      this.userService.register(this.username, this.password, this.passwordConfirmation, this.mail, this.firstname, this.lastname, this.country, this.type).subscribe(res => {
+      this.userService.register(this.username, this.password, this.mail, this.firstname, this.lastname, this.country, this.type).subscribe(res => {
 
         if (res['message'] == 'Errors found') {
           

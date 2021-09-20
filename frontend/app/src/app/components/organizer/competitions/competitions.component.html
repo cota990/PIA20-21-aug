@@ -117,12 +117,13 @@
                         
                         <span class = 'radio-span'>Competition phases: </span>
                         <input type='radio' value = 'F' name = 'phases' [(ngModel)]='phases' required> Finals
+                        <input type='radio' value = 'Q' name = 'phases' [(ngModel)]='phases' required> Qualification + Finals
                         <input type='radio' value = 'K' name = 'phases' [(ngModel)]='phases' required> Knockout stage
                         <input type='radio' value = 'G' name = 'phases' [(ngModel)]='phases' required> Group stage
 
                     </div>
 
-                    <div class = 'col-sm-12 input-field-container' *ngIf = 'phases == "F"'>
+                    <div class = 'col-sm-12 input-field-container' *ngIf = 'phases == "F" || phases == "Q"'>
 
                         <span class = 'select-span'>Attempts in finals: </span>
                         <input type='number' name = 'rounds' placeholder='Number of rounds in finals (default 1)' [(ngModel)]='rounds' class = 'input-field'>

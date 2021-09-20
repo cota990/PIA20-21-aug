@@ -17,6 +17,11 @@ let scoreFormat = new Schema({
     // description of score format
     description: {
         type: String
+    },
+
+    // for sorting results; match, distance, number - desc; races - asc
+    sort: {
+        type: String
     }
 
 });

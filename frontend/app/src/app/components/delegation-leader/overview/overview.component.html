@@ -2,9 +2,11 @@
 
     <div class='row overview-row'>
 
-        <div class = 'col-sm-12'>
-
+        <div class = 'col-sm-12 header-div'>
             <h3>Number of participants for {{countryName}}: {{numOfParticipants}}</h3>
+        </div>
+
+        <div class = 'col-sm-3 table-container'>
 
             <table *ngIf = 'participantsSports.length > 0' >
 
@@ -15,7 +17,7 @@
 
                 </tr>
 
-                <tr *ngFor = 'let ps of participantsSports'>
+                <tr *ngFor = 'let ps of participantsSports' (click) = 'selectSportFromTable(ps.sport)'>
 
                     <td>{{ps.sport}}</td>
                     <td>{{ps.participants}}</td>
@@ -23,6 +25,105 @@
                 </tr>
             
             </table>
+
+        </div>
+
+        <div class = 'col-sm-9 participants-container' *ngIf = 'participantsSports.length > 0'>
+
+            <div *ngIf = 'selectedSport == undefined' style = 'width: 100%;'>
+                
+                <div class = 'col-sm-12 select-container'>
+                        
+                    <span class = 'select-span'>Click on sport in table or select from list to view details: </span>
+                    <select name = 'sport' [(ngModel)] = 'selectedSport' class = 'select-field' (change) = 'goToSport()'>
+                        <option *ngFor = 'let s of sportOptions' label={{s}} value={{s}}></option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div *ngIf = 'selectedSport != undefined && selectedDiscipline == undefined' style = 'width: 100%;'>
+
+                <span class = 'breadcrumb-navigation ' 
+                      (click) = 'goToStart()'>Start</span>
+                
+                <span>-></span>
+
+                <span class = 'breadcrumb-navigation ' 
+                      (click) = 'goToSport()'>{{selectedSport}}</span>
+
+                <div *ngIf = 'disciplineOptions.length == 0'>
+
+                    <table *ngIf = 'displayParticipants.length > 0' >
+
+                        <tr>
+                            
+                            <th>Name</th>
+                            <th>Gender</th>
+        
+                        </tr>
+        
+                        <tr *ngFor = 'let ps of displayParticipants'>
+        
+                            <td>{{ps.fullname}}</td>
+                            <td>{{ps.gender}}</td>
+        
+                        </tr>
+                    
+                    </table>
+
+                </div>
+
+                <div *ngIf = 'disciplineOptions.length != 0'>
+
+                    <div class = 'col-sm-12 select-container'>
+                        
+                        <span class = 'select-span'>Select discipline from list to view details: </span>
+                        <select name = 'discipline' [(ngModel)] = 'selectedDiscipline' class = 'select-field' (change) = 'goToDiscipline()'>
+                            <option *ngFor = 'let d of disciplineOptions' label={{d}} value={{d}}></option>
+                        </select>
+    
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div *ngIf = 'selectedSport != undefined && selectedDiscipline != undefined' style = 'width: 100%;'>
+            
+                <span class = 'breadcrumb-navigation ' 
+                      (click) = 'goToStart()'>Start</span>
+                
+                <span>-></span>
+
+                <span class = 'breadcrumb-navigation ' 
+                      (click) = 'goToSport()'>{{selectedSport}}</span>
+
+                <span>-></span>
+
+                <span class = 'breadcrumb-navigation ' 
+                      (click) = 'goToDiscipline()'>{{selectedDiscipline}}</span>
+
+                <table *ngIf = 'displayParticipants.length > 0' >
+
+                    <tr>
+                        
+                        <th>Name</th>
+                        <th>Gender</th>
+    
+                    </tr>
+    
+                    <tr *ngFor = 'let ps of displayParticipants'>
+    
+                        <td>{{ps.fullname}}</td>
+                        <td>{{ps.gender}}</td>
+    
+                    </tr>
+                    
+                </table>
+
+            </div>
 
         </div>
         

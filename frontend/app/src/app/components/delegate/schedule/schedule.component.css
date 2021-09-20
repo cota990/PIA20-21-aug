@@ -1,4 +1,4 @@
-.overview-container {
+.schedule-container {
     height: 760px;
     max-height: 760px;
     min-height: 300px;
@@ -7,13 +7,36 @@
     padding-top: 20px;
 }
 
-.overview-row {
+.schedule-row {
     width: 100%;
-    height: 600px;
+    height: 60px;
 }
 
-.header-div {
+.select-container {
+
     height: 30px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.select-span {
+
+    width: 100%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+
+}
+
+.select-field {
+
+    width: 70%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+
 }
 
 .table-container {
@@ -60,40 +83,16 @@ td {
     cursor: pointer;
 }
 
-.select-container {
-
-    width: 100%;
+.input-field {
+    width: 70%;
     height: 30px;
     display: flex;
     justify-content: center;
-
 }
 
-.select-span {
-
+.status-report {
+    height: 70px;
     width: 100%;
-    height: 25px;
-    display: flex;
-    justify-content: center;
-    margin-right: 10px;
-
+    text-align: center;
+    color: red;
 }
-
-.select-field {
-
-    width: 25%;
-    height: 25px;
-    display: flex;
-    justify-content: center;
-
-}
-
-.breadcrumb-navigation {
-    /*float: left;*/
-    height: 30px;
-    vertical-align: middle;
-    color: blue;
-    cursor: pointer;
- }
-
- 

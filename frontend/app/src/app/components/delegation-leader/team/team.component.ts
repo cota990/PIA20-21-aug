@@ -150,8 +150,25 @@ export class TeamComponent implements OnInit {
       else {
 
         this.teamsService.submitTeam(this.country, this.gender, this.sport, this.discipline).subscribe((res) => {
-          console.log (res);
-          this.errorsFound = res['message'];
+          
+          if (res['message'] == 'Errors found') {
+          
+            if (res['competitionStarted'] != '')
+              this.errorsFound += res['competitionStarted'] + '. ';
+  
+            if (res['teamAdded'] != '')
+              this.errorsFound += res['teamAdded'] + '. ';
+  
+            if (res['sportNotFound'] != '')
+              this.errorsFound += res['sportNotFound'] + '. ';
+  
+            if (res['minimumPlayers'] != '')
+              this.errorsFound += res['minimumPlayers'];
+            
+          }
+  
+          else this.errorsFound = res['message'];
+        
         })
 
       }
