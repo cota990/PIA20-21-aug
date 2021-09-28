@@ -71,4 +71,12 @@ export class CompetitionService {
 
   }
 
+  finnishCompetition (competition: Competition) {
+
+    const data = competition;
+
+    return this.http.post(`${this.uri}/finnishCompetition`, data);
+
+  }
+
 }

@@ -1,6 +1,8 @@
 import express from 'express';
 import User from '../models/user';
 import Competition from '../models/competition';
+import Participant from '../models/participant';
+import Country from '../models/country';
 
 export class CompetitionControler {
 
@@ -71,7 +73,10 @@ export class CompetitionControler {
                                 finalResult: phases == 'F'? '' : undefined,
                                 finalPosition: 0,
                                 group: phases == 'G' ? '' : undefined,
-                                groupPoints: phases == 'G' ? '' : undefined
+                                groupPoints: phases == 'G' ? '' : undefined,
+                                qualificationGroup: phases == 'Q' ? '' : undefined,
+                                qualificationResult: phases == 'Q' ? '' : undefined ,
+                                qualificationPosition: phases == 'Q' ? 0 : undefined,
                             }
 
                             teamsData.push (newTeam);
@@ -150,6 +155,7 @@ export class CompetitionControler {
                         endDate: endDate,
                         locations: locations,
                         status: 'O',
+                        canComplete: false,
                         round: round,
                         delegates: delegates,
                         participants: category == 'I' ? participantsData : undefined,
@@ -231,6 +237,7 @@ export class CompetitionControler {
         let category = req.body.category;
         let participants = req.body.participants;
         let teams = req.body.teams;
+        let numOfRounds = req.body.numOfRounds;
 
         const competition = await Competition.findOne ({'sport': sport, 'discipline': discipline, 'gender': gender}).exec();
 
@@ -279,6 +286,8 @@ export class CompetitionControler {
         
                     if (numOfCompetitors <= 2) 
                         console.log ('cant have competition with less than 3 competitors');
+
+                    let emptyArray:Object[] = [];
         
                     if (numOfCompetitors > 8) {
         
@@ -295,9 +304,14 @@ export class CompetitionControler {
                                 phase: 'Q',
                                 group: 'Group ' + (i + 1),
                                 confirmed: false,
-                                canAssign: true
+                                canAssign: true,
+                                completed: false,
+                                round: numOfRounds == undefined ? undefined : 1,
+                                competitors: [{}]
 
                             }
+
+                            groupObj.competitors.pop();
 
                             competitionObj.schedule.push (groupObj);
 
@@ -318,6 +332,26 @@ export class CompetitionControler {
                             let randPosition = Math.floor (Math.random() * (numOfCompetitors - competitors.length));
 
                             let competitor = competitorsDraw.splice (randPosition, 1)[0];
+
+                            let competitorInsert = {
+                                competitor: '',
+                                result: ''
+                            }
+
+                            if (category == 'I')
+                                competitorInsert.competitor = competitor.fullname;
+            
+                            else if (category == 'T')
+                                competitorInsert.competitor = competitor.country;
+
+                            for (let j = 0; j < competitionObj.schedule.length; j++) {
+
+                                if (competitionObj.schedule[j].group == ('Group ' + i))
+                                    competitionObj.schedule[j].competitors.push (competitorInsert);
+                            
+                            }
+
+                            
 
                             competitor.qualificationGroup = 'Group ' + i;
 
@@ -340,9 +374,14 @@ export class CompetitionControler {
                         location: '',
                         phase: 'F',
                         confirmed: false,
-                        canAssign: numOfCompetitors < 9 ? true : false
+                        canAssign: numOfCompetitors < 9 ? true : false,
+                        completed: false,
+                        round: numOfRounds == undefined ? undefined : 1,
+                        competitors: [{}]
 
                     }
+
+                    groupObj.competitors.pop();
 
                     competitionObj.schedule.push(groupObj);
 
@@ -363,7 +402,42 @@ export class CompetitionControler {
                         location: '',
                         phase: 'F',
                         confirmed: false,
-                        canAssign: true
+                        canAssign: true,
+                        completed: false,
+                        round: numOfRounds == undefined ? undefined : 1,
+                        competitors: [{}]
+
+                    }
+
+                    finalsObj.competitors.pop();
+
+                    if (category == 'I') {
+
+                        for (let i = 0; i < participants.length; i++) {
+
+                            let competitorInsert = {
+                                competitor: participants[i].fullname,
+                                result: ''
+                            }
+
+                            finalsObj.competitors.push (competitorInsert);
+
+                        }
+
+                    }
+
+                    else if (category == 'T') {
+
+                        for (let i = 0; i < teams.length; i++) {
+
+                            let competitorInsert = {
+                                competitor: teams[i].country,
+                                result: ''
+                            }
+
+                            finalsObj.competitors.push (competitorInsert);
+
+                        }
 
                     }
 
@@ -637,6 +711,10 @@ export class CompetitionControler {
 
         let phases = req.body.phases;
         let round = req.body.round;
+        let category = req.body.category;
+        let numOfRounds = req.body.numOfRounds;
+        let schedule = req.body.schedule;
+        let scoreFormat = req.body.scoreFormat;
 
         const competition = await Competition.findOne ({'sport': sport, 'discipline': discipline, 'gender': gender}).exec();
 
@@ -669,7 +747,623 @@ export class CompetitionControler {
 
             else {
 
+                let newSchedules:any[] = []
+
+                if (round == 'Q') {
+
+                    // go through schedule, check for event phase; if match check if previously completed; if not check if results are added, then complete that round
+                    // after that check if there should be next round scheduled and if there should be phase moved
+
+                    for (let i = 0; i < schedule.length; i++) {
+
+                        if (schedule[i].phase == round && !schedule[i].completed) {
+
+                            let comp = true;
+
+                            for (let j = 0; j < schedule[i].competitors.length; j++) {
+
+                                if (schedule[i].competitors[j].result == '')
+                                    comp = false;
+                            
+                            }
+
+                            if (comp) {
+                                
+                                schedule[i].completed = true;
+
+                                if (schedule[i].round != undefined && numOfRounds != undefined && schedule[i].round < numOfRounds) {
+
+                                    let scheduleObj = {
+
+                                        startDateTime: schedule[i].startDateTime,
+                                        location: schedule[i].location,
+                                        phase: schedule[i].phase,
+                                        confirmed: true,
+                                        canAssign: true,
+                                        completed: false,
+                                        round: numOfRounds == undefined ? undefined : parseInt(schedule[i].round) + 1,
+                                        competitors: [{}]
+                
+                                    }
+
+                                    scheduleObj.competitors.pop ();
+
+                                    for (let j = 0; j < schedule[i].competitors.length; j++) {
+
+                                        let newCompetitor = {
+                                            competitor: schedule[i].competitors[j].competitor,
+                                            result: ''
+                                        }
+
+                                        scheduleObj.competitors.push (newCompetitor);
+                                    
+                                    }
+
+                                    newSchedules.push (scheduleObj);
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    if (newSchedules.length > 0) {
+
+                        for (let i = 0; i < newSchedules.length; i++) {
+
+                            schedule.push (newSchedules[i]);
+
+                        }
+
+                    }
+
+                    // phase moving and finals generation
+
+                    let phaseCompleted = true;
+
+                    for (let i = 0; i < schedule.length; i++) {
+
+                        if (schedule[i].phase == round && !schedule[i].completed)
+                            phaseCompleted = false;
+
+                    }
+
+                    console.log ('phaseCompleted: ' + phaseCompleted);
+
+                    if (phaseCompleted) {
+
+                        competitionObj.round = 'F';
+
+                        // rank qualified competitors; if multiple rounds collect score
+
+                        let qualRankings:any[] = [];
+
+                        for (let i = 0; i < schedule.length; i++) {
+
+                            if (schedule[i].phase == round) {
+
+                                if (numOfRounds == undefined || numOfRounds == 1) {
+
+                                    for (let j = 0; j < schedule[i].competitors.length; j++) {
+
+                                        let newRankingEntry = {
+                                            competitor: schedule[i].competitors[j].competitor,
+                                            result: schedule[i].competitors[j].result
+                                        }
+
+                                        qualRankings.push(newRankingEntry);
+
+                                    }
+
+                                }
+
+                                else if (numOfRounds > 1) {
+
+                                    for (let j = 0; j < schedule[i].competitors.length; j++) {
+
+                                        let found: boolean = false;
+
+                                        for (let k = 0; k < qualRankings.length; k++)
+                                            if (qualRankings[k].competitor == schedule[i].competitors[j].competitor)
+                                                found = true;
+
+                                        if (!found) {
+
+                                            let newRankingEntry = {
+                                                competitor: schedule[i].competitors[j].competitor,
+                                                result: schedule[i].competitors[j].result
+                                            }
+    
+                                            qualRankings.push(newRankingEntry);
+
+                                        }
+
+                                        else {
+
+                                            for (let k = 0; k < qualRankings.length; k++)
+                                                if (qualRankings[k].competitor == schedule[i].competitors[j].competitor) {
+
+                                                    if (scoreFormat == 'points') {
+
+                                                        qualRankings[k].result += schedule[i].competitors[j].result;
+
+                                                    }
+
+                                                    else if (scoreFormat == 'distance') {
+
+                                                        if (schedule[i].competitors[j].result > qualRankings[k].result)
+                                                            qualRankings[k].result = schedule[i].competitors[j].result;
+
+                                                    }
+
+                                                    else {
+
+                                                        if (schedule[i].competitors[j].result < qualRankings[k].result)
+                                                            qualRankings[k].result = schedule[i].competitors[j].result;
+
+                                                    }
+                                                }
+
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                        // sort qual rankings 
+
+                        qualRankings.sort ((a, b) => {
+
+                            if (a.result < b.result && (scoreFormat == 'points' || scoreFormat == 'distance')) return 1;
+                            else if (a.result < b.result && !(scoreFormat == 'points' || scoreFormat == 'distance')) return -1;
+                            else if (a.result > b.result && (scoreFormat == 'points' || scoreFormat == 'distance')) return -1;
+                            else if (a.result > b.result && !(scoreFormat == 'points' || scoreFormat == 'distance')) return 1;
+                            else return 0;
+
+                        })
+
+                        // fill participants/teams qual results
+
+                        if (category == 'I') {
+
+                            for (let i = 0; i < qualRankings.length; i++) {
+
+                                for (let j = 0; j < competitionObj.participants.length; j++) {
+
+                                    if (qualRankings[i].competitor == competitionObj.participants[j].fullname) {
+
+                                        competitionObj.participants[j].qualificationResult = qualRankings[i].result;
+                                        competitionObj.participants[j].qualificationPosition = i + 1;
+
+                                        if (i > 7) {
+
+                                            competitionObj.participants[j].finalPosition = i + 1;
+
+                                        }
+
+                                        break;
+
+                                    }
+
+                                }
+
+                            }
+
+
+                        }
+
+                        else if (category == 'T') {
+
+                            for (let i = 0; i < qualRankings.length; i++) {
+
+                                for (let j = 0; j < competitionObj.teams.length; j++) {
+
+                                    if (qualRankings[i].competitor == competitionObj.teams[j].country) {
+
+                                        competitionObj.teams[j].qualificationResult = qualRankings[i].result;
+                                        competitionObj.teams[j].qualificationPosition = i + 1;
+
+                                        if (i > 7) {
+
+                                            competitionObj.teams[j].finalPosition = i + 1;
+
+                                        }
+
+                                        break;
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                        qualRankings = qualRankings.splice(0, 8);
+
+                        for (let i = 0; i < schedule.length; i++) {
+
+                            if (schedule[i].phase == competitionObj.round) {
+                                
+                                schedule[i].competitors = qualRankings;
+
+                                for (let j = 0; j < schedule[i].competitors.length; j++)
+                                    schedule[i].competitors[j].result = '';
+
+                            }
+
+                        }
+
+                    }
+
+                    competitionObj.schedule = schedule;
+
+                }
+
+                else if (round == 'F') {
+
+                    if (phases == 'Q' || phases == 'F') {
+
+                        // go through schedule, check for event phase; if match check if previously completed; if not check if results are added, then complete that round
+                        // after that check if there should be next round scheduled and if there should be phase moved
+
+                        for (let i = 0; i < schedule.length; i++) {
+
+                            if (schedule[i].phase == round && !schedule[i].completed) {
+
+                                let comp = true;
+
+                                for (let j = 0; j < schedule[i].competitors.length; j++) {
+
+                                    if (schedule[i].competitors[j].result == '')
+                                        comp = false;
+                                
+                                }
+
+                                if (comp) {
+                                
+                                    schedule[i].completed = true;
+    
+                                    if (schedule[i].round != undefined && numOfRounds != undefined && schedule[i].round < numOfRounds) {
+    
+                                        let scheduleObj = {
+    
+                                            startDateTime: schedule[i].startDateTime,
+                                            location: schedule[i].location,
+                                            phase: schedule[i].phase,
+                                            confirmed: true,
+                                            canAssign: true,
+                                            completed: false,
+                                            round: numOfRounds == undefined ? undefined : parseInt(schedule[i].round) + 1,
+                                            competitors: [{}]
+                    
+                                        }
+    
+                                        scheduleObj.competitors.pop ();
+
+                                        for (let j = 0; j < schedule[i].competitors.length; j++) {
+
+                                            let newCompetitor = {
+                                                competitor: schedule[i].competitors[j].competitor,
+                                                result: ''
+                                            }
+    
+                                            scheduleObj.competitors.push (newCompetitor);
+                                        
+                                        }
+    
+                                        newSchedules.push (scheduleObj);
+    
+                                    }
+    
+                                }
+
+                            }
+
+                        }
+
+                        if (newSchedules.length > 0) {
+
+                            for (let i = 0; i < newSchedules.length; i++) {
+    
+                                schedule.push (newSchedules[i]);
+    
+                            }
+    
+                        }
+
+                        // check for extra rounds; if not complete competition
+
+                        let phaseCompleted = true;
+
+                        for (let i = 0; i < schedule.length; i++) {
+
+                            if (schedule[i].phase == round && !schedule[i].completed)
+                                phaseCompleted = false;
+
+                        }
+
+                        competitionObj.schedule = schedule;
+
+                        console.log ('phaseCompleted: ' + phaseCompleted);
+
+                        if (phaseCompleted) {
+
+                            let finalRankings:any[] = [];
+
+                            for (let i = 0; i < schedule.length; i++) {
+
+                                if (schedule[i].phase == round) {
+    
+                                    if (numOfRounds == undefined || numOfRounds == 1) {
+    
+                                        for (let j = 0; j < schedule[i].competitors.length; j++) {
+    
+                                            let newRankingEntry = {
+                                                competitor: schedule[i].competitors[j].competitor,
+                                                result: schedule[i].competitors[j].result
+                                            }
+    
+                                            finalRankings.push(newRankingEntry);
+    
+                                        }
+    
+                                    }
+    
+                                    else if (numOfRounds > 1) {
+    
+                                        for (let j = 0; j < schedule[i].competitors.length; j++) {
+    
+                                            let found: boolean = false;
+    
+                                            for (let k = 0; k < finalRankings.length; k++)
+                                                if (finalRankings[k].competitor == schedule[i].competitors[j].competitor)
+                                                    found = true;
+    
+                                            if (!found) {
+    
+                                                let newRankingEntry = {
+                                                    competitor: schedule[i].competitors[j].competitor,
+                                                    result: schedule[i].competitors[j].result
+                                                }
+        
+                                                finalRankings.push(newRankingEntry);
+    
+                                            }
+    
+                                            else {
+    
+                                                for (let k = 0; k < finalRankings.length; k++)
+                                                    if (finalRankings[k].competitor == schedule[i].competitors[j].competitor) {
+    
+                                                        if (scoreFormat == 'points') {
+    
+                                                            finalRankings[k].result += schedule[i].competitors[j].result;
+    
+                                                        }
+    
+                                                        else if (scoreFormat == 'distance') {
+    
+                                                            if (schedule[i].competitors[j].result > finalRankings[k].result)
+                                                                finalRankings[k].result = schedule[i].competitors[j].result;
+    
+                                                        }
+    
+                                                        else {
+    
+                                                            if (schedule[i].competitors[j].result < finalRankings[k].result)
+                                                                finalRankings[k].result = schedule[i].competitors[j].result;
+    
+                                                        }
+                                                    }
+    
+    
+                                            }
+    
+                                        }
+    
+                                    }
+    
+                                }
+    
+                            }
+    
+                            // sort qual rankings 
+    
+                            finalRankings.sort ((a, b) => {
+    
+                                if (a.result < b.result && (scoreFormat == 'points' || scoreFormat == 'distance')) return 1;
+                                else if (a.result < b.result && !(scoreFormat == 'points' || scoreFormat == 'distance')) return -1;
+                                else if (a.result > b.result && (scoreFormat == 'points' || scoreFormat == 'distance')) return -1;
+                                else if (a.result > b.result && !(scoreFormat == 'points' || scoreFormat == 'distance')) return 1;
+                                else return 0;
+    
+                            })
+
+                            
+
+                            // check for extra round and set positions
+
+                            let extraRound: boolean = false;
+
+                            let curPosition = 1;
+
+                            for (let i = 0; i < finalRankings.length; i++) {
+
+                                if (category == 'I') {
+
+                                    for (let j = 0; j < competitionObj.participants.length; j++) {
+
+                                        if (finalRankings[i].competitor == competitionObj.participants[j].fullname) {
+
+                                            competitionObj.participants[j].finalResult = finalRankings[i].result;
+
+                                            if (i == 0 || (i > 0 && finalRankings[i].result != finalRankings[i - 1].result)) {
+                                                
+                                                curPosition = i + 1;
+                                                competitionObj.participants[j].finalPosition = curPosition;
+
+                                            }
+
+                                            else if (i > 0 && finalRankings[i].result == finalRankings[i - 1].result) {
+
+                                                competitionObj.participants[j].finalPosition = curPosition;
+
+                                            }
+                                            
+                                            break;
+
+                                        }
+
+                                    }
+
+                                }
+
+                                else if (category == 'T') {
+
+                                    for (let j = 0; j < competitionObj.teams.length; j++) {
+
+                                        if (finalRankings[i].competitor == competitionObj.teams[j].country) {
+
+                                            competitionObj.teams[j].finalResult = finalRankings[i].result;
+                                            
+                                            if (i == 0 || (i > 0 && finalRankings[i].result != finalRankings[i - 1].result)) {
+                                                
+                                                curPosition = i + 1;
+                                                competitionObj.teams[j].finalPosition = curPosition;
+
+                                            }
+
+                                            else if (i > 0 && finalRankings[i].result == finalRankings[i - 1].result) {
+
+                                                competitionObj.teams[j].finalPosition = curPosition;
+
+                                            }
+                                            
+                                            break;
+                                            
+                                        }
+
+                                    }
+
+                                }
+
+                                if (i < finalRankings.length - 1 && finalRankings[i].result == finalRankings[i + 1].result)
+                                    extraRound = true;
+
+                            }
+
+                            if (extraRound) {
+
+                                // generate extra event
+
+                                for (let i = 0; i < schedule.length; i++) {
+
+                                    if (schedule[i].phase == round) {
+
+                                        let scheduleObj = {
+    
+                                            startDateTime: schedule[i].startDateTime,
+                                            location: schedule[i].location,
+                                            phase: 'E',
+                                            group: 'Extra round',
+                                            confirmed: true,
+                                            canAssign: true,
+                                            completed: false,
+                                            competitors: [{}]
+                    
+                                        }
+    
+                                        scheduleObj.competitors.pop ();
+
+                                        for (let j = 0; j < finalRankings.length; j++) {
+
+                                            if (j < finalRankings.length - 1 && j > 0 && (finalRankings[j].result == finalRankings[j + 1].result
+                                                || finalRankings[j].result == finalRankings[j - 1].result)) {
+
+                                                let newCompetitor = {
+                                                    competitor: finalRankings[j].competitor,
+                                                    result: ''
+                                                }
+        
+                                                scheduleObj.competitors.push (newCompetitor);
+                                            }
+
+                                            else if (j == 0 && finalRankings[j].result == finalRankings[j + 1].result) {
+
+                                                let newCompetitor = {
+                                                    competitor: finalRankings[j].competitor,
+                                                    result: ''
+                                                }
+        
+                                                scheduleObj.competitors.push (newCompetitor);
+                                            }
+
+                                            else if (j == finalRankings.length - 1 && finalRankings[j].result == finalRankings[j - 1].result) {
+
+                                                let newCompetitor = {
+                                                    competitor: finalRankings[j].competitor,
+                                                    result: ''
+                                                }
+        
+                                                scheduleObj.competitors.push (newCompetitor);
+                                            }
+
+                                            
+                                        
+                                        }
+    
+                                        competitionObj.schedule.push (scheduleObj);
+
+                                    }
+
+                                }
+
+                                competitionObj.round = 'E';
+
+                            }
+
+                            else
+                                competitionObj.canComplete = true;
+
+                        }
+
+                    }
+
+                }
+
+                else if (round == 'E') {
+
+                    for (let i = 0; i < schedule.length; i++) {
+
+                        if (schedule[i].phase == round) {
+
+                            // find positions to be determined and rank competitors
+
+                            let extraCompetitors:any[] = [];
+
+                            for (let j = 0; j < schedule[i].competitors.length; j++) {
+
+                                //let 
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
             }
+
+            competitionForUpdate = competitionObj;
 
         }
 
@@ -685,6 +1379,114 @@ export class CompetitionControler {
 
         }
 
+    }
+
+    finnishCompetition = async (req: express.Request, res: express.Response) => {
+
+        // finnish competition and assign medals
+
+        let errorFound: boolean = false;
+        let errorReport = {
+            
+            message: 'Errors found',
+            noCompetition: '',
+            competitionCompleted: '',
+            scheduleGenerated: '',
+            overlaps: '',
+            datesOutOfRange: ''
+        };
+
+        let sport = req.body.sport;
+        let discipline = req.body.discipline;
+        let gender = req.body.gender;
+
+        let phases = req.body.phases;
+        let round = req.body.round;
+        let category = req.body.category;
+        let numOfRounds = req.body.numOfRounds;
+        let schedule = req.body.schedule;
+        let scoreFormat = req.body.scoreFormat;
+
+        let participants = req.body.participants;
+
+        const competition = await Competition.findOne ({'sport': sport, 'discipline': discipline, 'gender': gender}).exec();
+
+        let competitionForUpdate;
+
+        if (!competition) {
+
+            errorFound = true;
+            errorReport.noCompetition = 'No competition for that sport, discipline and gender is started';
+
+        }
+
+        else {
+
+            let competitionObj = competition.toObject({getters: true});
+
+            if (competitionObj.status == 'C') {
+
+                errorFound = true;
+                errorReport.competitionCompleted = 'Competition is already finnished';
+
+            }
+
+            else if (competitionObj.status == 'O') {
+
+                errorFound = true;
+                errorReport.scheduleGenerated = 'Schedule for that competition is not generated';
+
+            }
+
+            else {
+
+                competitionObj.status = 'C';
+
+                if (category == 'I') {
+
+                    for (let i = 0; i < competitionObj.participants.length; i++) {
+
+                        if (competitionObj.participants[i].finalPosition != undefined && competitionObj.participants[i].finalPosition <= 3) {
+
+                            let name = competitionObj.participants[i].fullname.split(', ');
+
+                            let part = await Participant.findOneAndUpdate({'firstname': name[1], 'lastname': name[0], 'gender': gender, 'sport': sport}, {$inc : {'medals' : 1}}).exec();
+
+                            let partObj = part.toObject({getters: true});
+                            let country;
+                            
+                            if (competitionObj.participants[i].finalPosition == 1)
+                                country = await Country.findOneAndUpdate ({'abbr': partObj.country}, {$inc : {'numOfGoldMedals' : 1}}).exec();
+
+                            else if (competitionObj.participants[i].finalPosition == 2)
+                                country = await Country.findOneAndUpdate ({'abbr': partObj.country}, {$inc : {'numOfSilverMedals' : 1}}).exec();
+
+                            else if (competitionObj.participants[i].finalPosition == 3)
+                                country = await Country.findOneAndUpdate ({'abbr': partObj.country}, {$inc : {'numOfBronzeMedals' : 1}}).exec();
+
+                        }
+                    
+                    }
+
+                }
+
+            }
+
+            competitionForUpdate = competitionObj;
+
+        }
+
+        if (errorFound)
+            res.json (errorReport);
+        else {
+
+            //competitionForUpdate.schedule = schedule;
+
+            const competitionReturn = await Competition.findOneAndUpdate ({'sport': sport, 'discipline': discipline, 'gender': gender}, competitionForUpdate).exec();
+
+            res.json (competitionForUpdate);
+
+        }
     }
 
 }

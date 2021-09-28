@@ -48,20 +48,16 @@ let participant = new Schema (
     }
 );
 
-let participantGroup = new Schema (
+let competitorResult = new Schema (
     {
-        // round of competition
-        round: {
+        // name of participant/ name of country
+        competitor: {
             type: String
         },
 
-        // name of group
-        groupName: {
+        // result achieved
+        result: {
             type: String
-        },
-
-        participants: {
-            type: Array (participant)
         }
     }
 );
@@ -96,6 +92,22 @@ let team = new Schema({
     // points acquired in group stage
     groupPoints: {
         type: Number
+    },
+
+    // for competitions in qualification + finals format
+    qualificationGroup: {
+        type: String
+    },
+
+
+    // for competitions in qualification + finals format
+    qualificationResult: {
+        type: String
+    },
+
+    // for competitions in qualification + finals format
+    qualificationPosition: {
+        type: Number
     }
 
 });
@@ -119,7 +131,12 @@ let schedule = new Schema ({
 
     // if delegate can assign date and location
     canAssign: {
+        type: Boolean
+    },
 
+    // if this event is completed
+    completed: {
+        type: Boolean
     },
 
     // phase of competition
@@ -132,7 +149,7 @@ let schedule = new Schema ({
         type: String
     },
 
-    // for group stages
+    // for group stages/ sports with series
     round: {
         type: String
     },
@@ -152,6 +169,15 @@ let schedule = new Schema ({
     },
 
     participant2: {
+        type: String
+    },
+
+    // for individual disciplines
+    competitors: {
+        type: Array(competitorResult)
+    },
+
+    result: {
         type: String
     }
 
@@ -199,6 +225,11 @@ let competition = new Schema ({
         type: String
     },
 
+    // if this event can be finnished by delegate
+    canComplete: {
+        type: Boolean
+    },
+
     // round: current round of competition: number for group stage round, R16, QF, SF for knockout stages, Q, for qualification, F for finals
 
     round: {
@@ -210,11 +241,6 @@ let competition = new Schema ({
     // participants for individual sports
     participants: {
         type: Array (participant)
-    },
-
-    // participants for individual sports after scheduling and grouping
-    participantGroups: {
-        type: Array (participantGroup)
     },
 
     // participating teams for team sports

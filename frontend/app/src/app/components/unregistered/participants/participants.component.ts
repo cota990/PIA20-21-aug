@@ -291,6 +291,12 @@ export class ParticipantsComponent implements OnInit {
       
     }
 
+    if (this.medalWinnersOnly != undefined && this.medalWinnersOnly == true) {
+
+      this.participants = this.participants.filter( p => (p.medals != undefined && p.medals > 0));
+      
+    }
+
     console.log (this.participants);
 
     this.numOfPagesParticipants = Math.floor((this.participants.length / this.participantsPerPage)) + 1;

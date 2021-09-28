@@ -122,7 +122,7 @@ export class ScheduleComponent implements OnInit {
 
         }
 
-        else if (i == 13 || i == 15) {
+        else if (i == 13 || i == 16) {
 
           if (dateString[i] != ':') {
             

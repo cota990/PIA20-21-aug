@@ -34,6 +34,7 @@
                 
                     <span *ngIf = 'selectedCompetition.round == "Q"'>Current round: Qualifications</span>
                     <span *ngIf = 'selectedCompetition.round == "F"'>Current round: Finals</span>
+                    <span *ngIf = 'selectedCompetition.round == "E"'>Current round: Extra round</span>
 
                     <div class = 'row'>
 
@@ -45,16 +46,11 @@
 
                                 <div class = 'row'>
                                 
-                                    <div class='col-sm-6 '>{{cc.fullname}}</div>
+                                    <div class='col-sm-6 '>{{cc.competitor}}</div>
 
                                     <div class='col-sm-6 '>
 
-                                        <input *ngIf = 'selectedCompetition.round == "Q" &&  (selectedCompetition.numOfRounds == undefined || selectedCompetition.numOfRounds == 1)' 
-                                            type='text' name = 'result' placeholder='enter result...' [(ngModel)]='cc.qualificationResult' class = 'input-field'>
-
-                                        <input *ngIf = 'selectedCompetition.round == "F" &&  (selectedCompetition.numOfRounds == undefined || selectedCompetition.numOfRounds == 1)' 
-                                            type='text' name = 'result' placeholder='enter result...' [(ngModel)]='cc.finalResult' class = 'input-field'>
-
+                                        <input type='text' name = 'result' placeholder='enter result...' [(ngModel)]='cc.result' class = 'input-field' [disabled] = 'c.completed'>
 
                                     </div>
 
@@ -62,11 +58,17 @@
 
                             </div>
 
-                            <button (click) = 'submitResultsForRound(c.competitors)'>Submit scores</button>
+                            <button (click) = 'submitResultsForRound(c.competitors)' [disabled] = 'c.completed'>Submit scores</button>
                             
                         </div>
 
-                        
+                        <div *ngIf = 'competitors.length == 0' class='col-sm-6 col-md-4'>
+
+                            No events are scheduled
+
+                        </div>
+
+                        <button *ngIf = 'selectedCompetition.canComplete' (click) = 'finnishCompetition()'>Finnish competition</button>
 
                     </div>
     

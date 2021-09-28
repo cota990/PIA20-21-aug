@@ -36,20 +36,20 @@ export class CountriesComponent implements OnInit {
 
       this.medalCountCountries.sort ((a, b) => {
 
-        if (a.numOfGoldMedals > b.numOfGoldMedals) return 1;
-        else if (a.numOfGoldMedals < b.numOfGoldMedals) return -1;
+        if (a.numOfGoldMedals > b.numOfGoldMedals) return -1;
+        else if (a.numOfGoldMedals < b.numOfGoldMedals) return 1;
         else {
 
-          if (a.numOfSilverMedals > b.numOfSilverMedals) return 1;
-          else if (a.numOfSilverMedals < b.numOfSilverMedals) return -1;
+          if (a.numOfSilverMedals > b.numOfSilverMedals) return -1;
+          else if (a.numOfSilverMedals < b.numOfSilverMedals) return 1;
           else {
 
-            if (a.numOfBronzeMedals > b.numOfBronzeMedals) return 1;
-            else if (a.numOfBronzeMedals < b.numOfBronzeMedals) return -1;
+            if (a.numOfBronzeMedals > b.numOfBronzeMedals) return -1;
+            else if (a.numOfBronzeMedals < b.numOfBronzeMedals) return 1;
             else {
 
-              if (a.name > b.name) return 1;
-              else if (a.name < b.name) return -1;
+              if (a.name > b.name) return -1;
+              else if (a.name < b.name) return 1;
               else return 0;
             }
 

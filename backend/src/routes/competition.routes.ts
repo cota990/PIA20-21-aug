@@ -23,4 +23,8 @@ competitionRouter.route('/submitResults').post(
     (req, res) => new CompetitionControler().submitResults(req, res)
 );
 
+competitionRouter.route('/finnishCompetition').post(
+    (req, res) => new CompetitionControler().finnishCompetition(req, res)
+);
+
 export default competitionRouter;

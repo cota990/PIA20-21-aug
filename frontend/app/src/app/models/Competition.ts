@@ -16,6 +16,6 @@ export class Competition {
     allowedResults: string[];
     phases: string;
     numOfRounds: number;
-    schedule: Object[];
+    schedule: any[];
 
 }

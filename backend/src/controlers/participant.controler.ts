@@ -230,7 +230,8 @@ export class ParticipantControler {
                     sport: sport,
                     disciplines: disciplines,
                     country: country,
-                    fullname: fullname
+                    fullname: fullname,
+                    medals: 0
                 }
 
                 let newParticipant = new Participant (data);

@@ -64,6 +64,9 @@ export class ResultsComponent implements OnInit {
 
   goToDiscipline () {
 
+    this.competitors = [];
+    this.selectedCompetition = undefined;
+
     let disciplineGender = this.discipline.slice(0, this.discipline.length - 1).split('(');
 
     this.competitions.forEach ((c) => {
@@ -76,9 +79,25 @@ export class ResultsComponent implements OnInit {
     if (this.selectedCompetition.round == 'Q') {
 
       let competitors = [];
-      let groups = [];
 
-      if (this.selectedCompetition.category == 'I') {
+      let schedule: any[] = this.selectedCompetition.schedule;
+      
+      for (let i = 0; i < schedule.length; i++) {
+
+        if (schedule[i].phase == 'Q' && schedule[i].confirmed) {
+
+          let newGroup = {
+            groupName: schedule[i].round == undefined ? schedule[i].group : schedule[i].group + ' Round ' + schedule[i].round,
+            competitors: schedule[i].competitors,
+            completed: schedule[i].completed
+          };
+
+          competitors.push (newGroup);
+
+        }
+
+      }
+      /*if (this.selectedCompetition.category == 'I') {
 
         for (let i = 0; i < this.selectedCompetition.participants.length; i++) {
 
@@ -106,7 +125,7 @@ export class ResultsComponent implements OnInit {
 
         }
 
-      }
+      } */
 
       this.competitors = competitors;
       console.log (this.competitors);
@@ -116,28 +135,53 @@ export class ResultsComponent implements OnInit {
 
     else if (this.selectedCompetition.round == 'F') {
 
-      if (this.selectedCompetition.category == 'I') {
+      let competitors = [];
 
-        let competitors = [];
+      let schedule: any[] = this.selectedCompetition.schedule;
+      
+      for (let i = 0; i < schedule.length; i++) {
 
-        let newGroup = {
-          groupName: "Finals",
-          competitors: []
-        };
+        if (schedule[i].phase == 'F' && schedule[i].confirmed) {
 
-        this.selectedCompetition.participants.forEach ((p) => {
+          let newGroup = {
+            groupName: schedule[i].round == undefined ? 'Finals' : 'Finals Round ' + schedule[i].round,
+            competitors: schedule[i].competitors,
+            completed: schedule[i].completed
+          };
 
-          if (p.qualificationPosition == undefined || p.qualificationPosition <= 8)
-            newGroup.competitors.push (p);
+          competitors.push (newGroup);
 
-        });
-
-        competitors.push (newGroup);
-
-        this.competitors = competitors;
-        console.log (this.competitors);
+        }
 
       }
+
+      this.competitors = competitors;
+
+    }
+
+    else if (this.selectedCompetition.round == 'E') {
+
+      let competitors = [];
+
+      let schedule: any[] = this.selectedCompetition.schedule;
+      
+      for (let i = 0; i < schedule.length; i++) {
+
+        if (schedule[i].phase == 'E' && schedule[i].confirmed) {
+
+          let newGroup = {
+            groupName: schedule[i].group,
+            competitors: schedule[i].competitors,
+            completed: schedule[i].completed
+          };
+
+          competitors.push (newGroup);
+
+        }
+
+      }
+
+      this.competitors = competitors;
 
     }
 
@@ -287,7 +331,7 @@ export class ResultsComponent implements OnInit {
 
   checkDateFormat (dateString: string)  {
 
-    if (dateString.length != 10)
+    if (dateString.length != 19)
       return false;
 
     else
@@ -301,6 +345,26 @@ export class ResultsComponent implements OnInit {
             return false;
 
           }
+        }
+
+        else if (i == 10) {
+
+          if (dateString[i] != ' ') {
+            
+            return false;
+
+          }
+
+        }
+
+        else if (i == 13 || i == 16) {
+
+          if (dateString[i] != ':') {
+            
+            return false;
+
+          }
+
         }
 
         else 
@@ -326,8 +390,7 @@ export class ResultsComponent implements OnInit {
 
     competitors.forEach ((c) => {
 
-      if ((this.selectedCompetition.round == 'Q' && (c.qualificationResult == undefined || c.qualificationResult == ''))
-          || (this.selectedCompetition.round == 'F' && (c.finalResult == undefined || c.finalResult == ''))) {
+      if (c.result == undefined || c.result == '') {
 
         errorFound = true;
 
@@ -345,10 +408,9 @@ export class ResultsComponent implements OnInit {
 
       competitors.forEach ((c) => {
 
-        if ((this.selectedCompetition.round == 'Q' && !this.checkScoreFormat(c.qualificationResult, this.selectedCompetition.scoreFormat))
-          || (this.selectedCompetition.round == 'F' && !this.checkScoreFormat(c.finalResult, this.selectedCompetition.scoreFormat))) {
+        if (!this.checkScoreFormat(c.result, this.selectedCompetition.scoreFormat)) {
 
-        errorFound = true;
+          errorFound = true;
 
         }
 
@@ -359,13 +421,69 @@ export class ResultsComponent implements OnInit {
     
       else {
 
-        this.errorsFound = 'proceed';
+        this.errorsFound = '';
 
-        console.log (this.selectedCompetition);
+        this.competitionService.submitResults(this.selectedCompetition).subscribe ((res) => {
+
+          console.log ('submit scores complete');
+          console.log (res);
+
+          if (res['message'] == undefined) {
+
+            console.log ('here');
+
+            let user = JSON.parse(sessionStorage.getItem('user'));
+
+            this.competitionService.getAllCompetitionsForDelegate(user.username).subscribe ((competitions: Competition[]) => {
+
+              this.competitions = competitions;
+        
+              competitions.forEach ((c) => {
+        
+                if (this.sportsOptions.indexOf (c.sport) == -1)
+                  this.sportsOptions.push (c.sport);
+        
+              });
+
+              this.goToDiscipline ();
+        
+            });
+
+          }
+            
+
+        }) 
 
       }
 
     }
+
+  }
+
+  finnishCompetition() {
+
+    this.competitionService.finnishCompetition(this.selectedCompetition).subscribe ((res) => {
+
+      alert('Competition finnished');
+
+      let user = JSON.parse(sessionStorage.getItem('user'));
+
+      this.competitionService.getAllCompetitionsForDelegate(user.username).subscribe ((competitions: Competition[]) => {
+
+        this.competitions = competitions;
+  
+        competitions.forEach ((c) => {
+  
+          if (this.sportsOptions.indexOf (c.sport) == -1)
+            this.sportsOptions.push (c.sport);
+  
+        });
+
+        this.goToDiscipline ();
+  
+      });
+
+    });
 
   }
 
